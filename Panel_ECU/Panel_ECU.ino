@@ -1,8 +1,15 @@
 #include <SPI.h>
 #include <mcp2515.h>
+
 uint8_t gear, brake;
 uint16_t temp, vel, rpm, fuel, bat, lat, lon, gas;
 uint32_t odometer;
+
+bool FLAG = false;
+bool INIT = false;
+
+struct can_frame INIT_LOG;
+struct can_frame STOP_LOG;
 
 uint32_t anterior;
 
@@ -45,19 +52,46 @@ void TFT_val(const char* nome, uint32_t valor) //RPM,marcha,battery,pitch,roll
 
 }
 
-void ligaLeds(int numero){
-  digitalWrite(latchPin,LOW);
-  for (byte count = 0; count<16; count++)
-  {   
-      digitalWrite(shiftPin,LOW);
-      digitalWrite(dataPin,leds[numero][count]);
-      digitalWrite(shiftPin,HIGH);
-      
+void ligaLeds(int numero) {
+  digitalWrite(latchPin, LOW);
+  for (byte count = 0; count < 16; count++)
+  {
+    digitalWrite(shiftPin, LOW);
+    digitalWrite(dataPin, leds[numero][count]);
+    digitalWrite(shiftPin, HIGH);
+
   }
-  digitalWrite(latchPin,HIGH);
+  digitalWrite(latchPin, HIGH);
+}
+
+ISR(PCINT0_vect) {
+  if (PINC & (1 << PINC0)) {    // A0 mudou de LOW para HIGH;
+
+  }
+  else { // A0 mudou de HIGH para LOW;
+    FLAG = true;
+  }
 }
 
 void setup() {
+  INIT_LOG.can_id  = 0x64E;
+  INIT_LOG.can_dlc = 1;
+  INIT_LOG.data[0] = 0x55;
+
+  STOP_LOG.can_id  = 0x64F;
+  STOP_LOG.can_dlc = 1;
+  STOP_LOG.data[0] = 0x66;
+
+  cli();
+  //Equivalente a pinMode(A0, INPUT_PULLUP)
+  DDRB &= ~(1 << DDC0); // Seta A0 como entrada;
+  PORTB |= (1 << PORTC0); // Liga Pull-up;
+
+  //setup PCINT8
+  PCICR |= (1 << PCIE1);
+  PCMSK0 |= (1 << PCINT0);
+  sei();
+
   Serial.begin(115200);
 
   pinMode(latchPin, OUTPUT);
@@ -118,6 +152,16 @@ void loop() {
     TFT_val("lon", lon);
   }
 
-  ligaLeds(map(rpm,0,4095,0,16));
-  
+  ligaLeds(map(rpm, 0, 4095, 0, 16));
+
+  if (FLAG && !INIT) {
+    mcp2515.sendMessage(&INIT_LOG);
+    INIT = true;
+    FLAG = false;
+  }
+  if (FLAG && INIT) {
+    mcp2515.sendMessage(&STOP_LOG);
+    INIT = false;
+    FLAG = false;
+  }
 }
