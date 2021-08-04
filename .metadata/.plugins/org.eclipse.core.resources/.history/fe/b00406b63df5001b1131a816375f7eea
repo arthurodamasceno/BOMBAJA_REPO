@@ -450,7 +450,7 @@ void Logger_taskF(void *pvParameters) {
 	}
 }
 
-/*LoRa Transceiver Write Task*/
+/*LoRa Transceiver Write Task --- THIS TASK NEED TO IMPLEMENT SYNC WORD */
 void Telemetry_taskF(void *pvParameters) {
 	while (1) {
 		uint8_t sync = 0xAA;

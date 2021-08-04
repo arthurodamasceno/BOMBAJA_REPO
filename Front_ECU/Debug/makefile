@@ -58,8 +58,8 @@ all: main-build
 main-build: Front_ECU.elf secondary-outputs
 
 # Tool invocations
-Front_ECU.elf: $(OBJS) $(USER_OBJS) D:\ARM\ Repo\Front_ECU\STM32F103C8TX_FLASH.ld
-	arm-none-eabi-gcc -o "Front_ECU.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"D:\ARM Repo\Front_ECU\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Front_ECU.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Front_ECU.elf: $(OBJS) $(USER_OBJS) D:\BOMBAJA_REPO\Front_ECU\STM32F103C8TX_FLASH.ld
+	arm-none-eabi-gcc -o "Front_ECU.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"D:\BOMBAJA_REPO\Front_ECU\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Front_ECU.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

@@ -450,16 +450,10 @@ void Logger_taskF(void *pvParameters) {
 	}
 }
 
-/*LoRa Transceiver Write Task*/
+/*LoRa Transceiver Write Task --- THIS TASK NEED TO IMPLEMENT SYNC WORD */
 void Telemetry_taskF(void *pvParameters) {
 	while (1) {
-		uint8_t sync = 0xAA;
-		uint8_t LoRa[23];
-		LoRa[0] = sync;
-		for(int y=1;y<23;y++){
-			LoRa[y] = buffer[y-1];
-		}
-		HAL_UART_Transmit(&huart1, LoRa, 23, 100);
+		HAL_UART_Transmit(&huart1, buffer, 22, 100);
 		vTaskDelay(100); /*10Hz frequency*/
 	}
 }

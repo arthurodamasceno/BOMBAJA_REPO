@@ -1,14 +1,14 @@
-12:32:17 **** Incremental Build of configuration Debug for project Front_ECU ****
+13:04:56 **** Incremental Build of configuration Debug for project Front_ECU ****
 make -j8 all 
 arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM3 -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "Front_ECU.elf" @"objects.list"   -mcpu=cortex-m3 -T"D:\ARM Repo\Front_ECU\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Front_ECU.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+arm-none-eabi-gcc -o "Front_ECU.elf" @"objects.list"   -mcpu=cortex-m3 -T"D:\BOMBAJA_REPO\Front_ECU\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Front_ECU.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: Front_ECU.elf
  
 arm-none-eabi-objdump -h -S  Front_ECU.elf  > "Front_ECU.list"
 arm-none-eabi-objcopy  -O binary  Front_ECU.elf  "Front_ECU.bin"
 arm-none-eabi-size   Front_ECU.elf 
    text	   data	    bss	    dec	    hex	filename
-  25496	     24	  13328	  38848	   97c0	Front_ECU.elf
+  25560	     24	  13328	  38912	   9800	Front_ECU.elf
 Finished building: default.size.stdout
  
 Finished building: Front_ECU.bin
@@ -16,5 +16,5 @@ Finished building: Front_ECU.bin
 Finished building: Front_ECU.list
  
 
-12:32:20 Build Finished. 0 errors, 0 warnings. (took 3s.43ms)
+13:04:57 Build Finished. 0 errors, 0 warnings. (took 1s.131ms)
 
