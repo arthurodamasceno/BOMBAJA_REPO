@@ -54,7 +54,7 @@ TaskHandle_t Telemetry_Task;
 uint16_t gas[1];
 uint8_t k = 0;
 uint8_t gear, brake;
-uint8_t startLOG=0 , stopLOG=0;
+uint8_t startLog=0 , stopLOG=0;
 uint8_t bsl[22];
 
 uint8_t buffer[22];

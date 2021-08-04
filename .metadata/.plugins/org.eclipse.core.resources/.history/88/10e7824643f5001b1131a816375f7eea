@@ -54,8 +54,6 @@ TaskHandle_t Telemetry_Task;
 uint16_t gas[1];
 uint8_t k = 0;
 uint8_t gear, brake;
-uint8_t startLOG=0 , stopLOG=0;
-uint8_t bsl[22];
 
 uint8_t buffer[22];
 
@@ -447,26 +445,6 @@ void Gas_taskF(void *pvParameters) {
 /*Logger Write Task  --- THIS TASK NEEDS TO IMPLEMENT START AND STOP LOG FUNCTIONS*/
 void Logger_taskF(void *pvParameters) {
 	while (1) {
-		if(startLOG==1){
-			startLOG=0;
-			bsl[1]  = 0xAA;
-			bsl[11] = 0xBB;
-			bsl[21] = 0xCC;
-			bsl[0]  = 0x00;
-			bsl[10] = 0x00;
-			bsl[20] = 0x00;
-			HAL_I2C_Master_Transmit(&hi2c1, (0x08 << 1), bsl, 22, 10);
-		}
-		if(stopLOG==1){
-			stopLOG=0;
-			bsl[0]  = 0xDD;
-			bsl[10] = 0xEE;
-			bsl[20] = 0xFF;
-			bsl[1]  = 0x00;
-			bsl[11] = 0x00;
-			bsl[21] = 0x00;
-			HAL_I2C_Master_Transmit(&hi2c1, (0x08 << 1), bsl, 22, 10);
-		}
 		HAL_I2C_Master_Transmit(&hi2c1, (0x08 << 1), buffer, 22, 10);
 		vTaskDelay(10); /*100Hz frequency*/
 	}
@@ -478,8 +456,8 @@ void Telemetry_taskF(void *pvParameters) {
 		uint8_t sync = 0xAA;
 		uint8_t LoRa[23];
 		LoRa[0] = sync;
-		for (int y = 1; y < 23; y++) {
-			LoRa[y] = buffer[y - 1];
+		for(int y=1;y<23;y++){
+			LoRa[y] = buffer[y-1];
 		}
 		HAL_UART_Transmit(&huart1, LoRa, 23, 100);
 		vTaskDelay(100); /*10Hz frequency*/
@@ -493,18 +471,6 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 	if (HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &RxHeader, rcv_msg)
 			!= HAL_OK) {
 		Error_Handler();
-	}
-
-	if (RxHeader.StdId == 0x64E) {
-		if (rcv_msg[0] == 0x55) {
-			startLOG=1;
-		}
-	}
-
-	if (RxHeader.StdId == 0x64F) {
-		if (rcv_msg[0] == 0x66) {
-			stopLOG=1;
-		}
 	}
 
 	if (RxHeader.StdId == 0x650) {
@@ -540,6 +506,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 	}
 
 }
+
 
 /**
  * @brief  Period elapsed callback in non blocking mode
