@@ -10,6 +10,7 @@ const uint8_t colunas = 11;
 extern uint8_t FLAG;
 
 struct data_t {
+  unsigned long sample;
   unsigned long time;
   uint32_t dados[colunas];
 };

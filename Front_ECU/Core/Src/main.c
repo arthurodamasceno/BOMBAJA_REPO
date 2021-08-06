@@ -57,6 +57,8 @@ uint8_t startLOG=0 , stopLOG=0;
 uint8_t bsl[22];
 
 uint8_t buffer[22];
+uint8_t sync = 0xAA;
+uint8_t LoRa[23];
 
 uint8_t GPS_in[GPS_in_SIZE];
 /* USER CODE END PV */
@@ -474,8 +476,6 @@ void Logger_taskF(void *pvParameters) {
 /*LoRa Transceiver Write Task*/
 void Telemetry_taskF(void *pvParameters) {
 	while (1) {
-		uint8_t sync = 0xAA;
-		uint8_t LoRa[23];
 		LoRa[0] = sync;
 		for (int y = 1; y < 23; y++) {
 			LoRa[y] = buffer[y - 1];
@@ -495,15 +495,15 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 	}
 
 	if (RxHeader.StdId == 0x64E) {
-		if (rcv_msg[0] == 0x55) {
+		//if (rcv_msg[0] == 0x55) {
 			startLOG=1;
-		}
+		//}
 	}
 
 	if (RxHeader.StdId == 0x64F) {
-		if (rcv_msg[0] == 0x66) {
+		//if (rcv_msg[0] == 0x66) {
 			stopLOG=1;
-		}
+		//}
 	}
 
 	if (RxHeader.StdId == 0x650) {

@@ -64,7 +64,7 @@ void ligaLeds(int numero) {
   digitalWrite(latchPin, HIGH);
 }
 
-ISR(PCINT0_vect) {
+ISR(PCINT1_vect) {
   if (PINC & (1 << PINC0)) {    // A0 mudou de LOW para HIGH;
 
   }
@@ -84,12 +84,12 @@ void setup() {
 
   cli();
   //Equivalente a pinMode(A0, INPUT_PULLUP)
-  DDRB &= ~(1 << DDC0); // Seta A0 como entrada;
-  PORTB |= (1 << PORTC0); // Liga Pull-up;
+  DDRC &= ~(1 << DDC0); // Seta A0 como entrada;
+  PORTC |= (1 << PORTC0); // Liga Pull-up;
 
   //setup PCINT8
   PCICR |= (1 << PCIE1);
-  PCMSK0 |= (1 << PCINT0);
+  PCMSK1 |= (1 << PCINT8);
   sei();
 
   Serial.begin(115200);

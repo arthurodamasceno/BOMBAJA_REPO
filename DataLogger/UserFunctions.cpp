@@ -6,9 +6,11 @@ static uint32_t startMicros;
 uint8_t buff[22];
 
 uint8_t FLAG = 0;
-
+uint32_t s=0;
 // Acquire a data record.
 void acquireData(data_t* data) {
+  data->sample = s;
+  s++;
   data->time = micros();
   data->dados[0]  =  buff[0];
   data->dados[1]  =  buff[1];
@@ -33,11 +35,11 @@ void receiveEvent(int howMany)
       buff[k] = Wire.read();
     }
 
-    if (buff[1] == 0xAA && buff[11] == 0xBB && buff[21] == 0xCC) {
+    if (buff[1] == 0xAA /*&& buff[11] == 0xBB && buff[21] == 0xCC*/) {
       FLAG = 1;
     }
 
-    if (buff[0] == 0xDD && buff[10] == 0xEE && buff[20] == 0xFF) {
+    if (buff[0] == 0xDD /*&& buff[10] == 0xEE && buff[20] == 0xFF*/) {
       FLAG = 0;
     }
   }
@@ -55,6 +57,7 @@ void printData(Print* pr, data_t* data) {
   if (startMicros == 0) {
     startMicros = data->time;
   }
+  pr->print(data->sample);
   pr->print(data->time - startMicros);
   for (int f = 0; f < 11; f++) {
     pr->write(',');
@@ -66,5 +69,5 @@ void printData(Print* pr, data_t* data) {
 // Print data header.
 void printHeader(Print* pr) {
   startMicros = 0;
-  pr->println(F("micros,gear,brake,gas,bat,temp,fuel,vel,rpm,odometer,lat,lon"));
+  pr->println(F("Sample Number (10 samples per second),UNIX Timestamp (Milliseconds since 1970-01-01),gear (),brake (),gas (),bat (),temp (),fuel (),vel (),rpm (),odometer (),lat (),lon ()"));
 }
