@@ -18,7 +18,7 @@ MinimumSerial MinSerial;
 
 #define ABORT_ON_OVERRUN 1
 
-const uint32_t LOG_INTERVAL_USEC = 1000000;    // f = 1Hz
+const uint32_t LOG_INTERVAL_USEC = 10000;    // f = 100Hz
 
 #ifndef USE_SHARED_SPI
 #define USE_SHARED_SPI 0
