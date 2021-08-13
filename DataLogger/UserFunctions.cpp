@@ -36,6 +36,7 @@ void receiveEvent(int howMany)
     }
 
     if (buff[1] == 0xAA /*&& buff[11] == 0xBB && buff[21] == 0xCC*/) {
+      s=0;
       FLAG = 1;
     }
 
