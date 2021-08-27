@@ -375,6 +375,10 @@ void Bat_taskF(void *pvParameters) {
 
 /*Fuel level read task */
 void Fuel_taskF(void *pvParameters) {
+	TickType_t xLastWakeTime;
+	const TickType_t xFrequency = 20;  //Ticks to wait since routine starts
+	xLastWakeTime = xTaskGetTickCount();
+
 	while (1) {
 		uint8_t fuelbuff[2];
 		fuelbuff[0] = (uint8_t) (analog[1] >> 8) & 0xFF;
@@ -394,7 +398,7 @@ void Fuel_taskF(void *pvParameters) {
 			Error_Handler();
 		}
 
-		vTaskDelay(20); /*50Hz frequency*/
+		vTaskDelayUntil(&xLastWakeTime,xFrequency); /*50Hz frequency*/
 	}
 }
 

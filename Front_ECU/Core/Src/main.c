@@ -475,13 +475,16 @@ void Logger_taskF(void *pvParameters) {
 
 /*LoRa Transceiver Write Task*/
 void Telemetry_taskF(void *pvParameters) {
+	TickType_t xLastWakeTime;
+	const TickType_t xFrequency = 100;
+	xLastWakeTime = xTaskGetTickCount();
 	while (1) {
 		LoRa[0] = sync;
 		for (int y = 1; y < 23; y++) {
 			LoRa[y] = buffer[y - 1];
 		}
 		HAL_UART_Transmit(&huart1, LoRa, 23, 100);
-		vTaskDelay(100); /*10Hz frequency*/
+		vTaskDelayUntil(&xLastWakeTime, xFrequency); /*10Hz frequency*/
 	}
 }
 
