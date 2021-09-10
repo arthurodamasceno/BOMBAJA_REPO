@@ -41,6 +41,8 @@ DMA_HandleTypeDef hdma_adc1;
 CAN_HandleTypeDef hcan;
 
 /* USER CODE BEGIN PV */
+I2C_HandleTypeDef hi2c2;
+
 TaskHandle_t Bat_Task;
 TaskHandle_t Fuel_Task;
 TaskHandle_t Speed_Task;
@@ -48,7 +50,7 @@ TaskHandle_t RPM_Task;
 TaskHandle_t Temp_Task;
 TaskHandle_t OD_Task;
 
-uint16_t analog[4];
+uint16_t analog[2];
 uint16_t temp16;
 uint32_t OD = 0;
 uint8_t PULSO = 0;
@@ -62,6 +64,8 @@ static void MX_ADC1_Init(void);
 static void MX_CAN_Init(void);
 
 /* USER CODE BEGIN PFP */
+static void MX_I2C2_Init(void);
+
 void Bat_taskF(void *pvParameters);
 void Fuel_taskF(void *pvParameters);
 void Speed_taskF(void *pvParameters);
@@ -91,6 +95,8 @@ int main(void) {
 	MX_CAN_Init();
 
 	/* USER CODE BEGIN 0 */
+	MX_I2C2_Init();
+
 	OD = Flash_Read_NUM(0x0801FC00);
 
 	CAN_Filter_Config();
@@ -105,7 +111,7 @@ int main(void) {
 		Error_Handler();
 	}
 
-	HAL_ADC_Start_DMA(&hadc1, (uint32_t*) analog, 4);
+	HAL_ADC_Start_DMA(&hadc1, (uint32_t*) analog, 2);
 
 	xTaskCreate(Bat_taskF, "BatTask", 128, NULL, 4, &Bat_Task);
 	xTaskCreate(Fuel_taskF, "FuelTask", 128, NULL, 4, &Fuel_Task);
@@ -239,6 +245,40 @@ static void MX_CAN_Init(void) {
 }
 
 /**
+  * @brief I2C2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_I2C2_Init(void)
+{
+
+  /* USER CODE BEGIN I2C2_Init 0 */
+
+  /* USER CODE END I2C2_Init 0 */
+
+  /* USER CODE BEGIN I2C2_Init 1 */
+
+  /* USER CODE END I2C2_Init 1 */
+  hi2c2.Instance = I2C2;
+  hi2c2.Init.ClockSpeed = 100000;
+  hi2c2.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c2.Init.OwnAddress1 = 0;
+  hi2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c2.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c2.Init.OwnAddress2 = 0;
+  hi2c2.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c2.Init.NoStretchMode = I2C_NOSTRETCH_ENABLE;
+  if (HAL_I2C_Init(&hi2c2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C2_Init 2 */
+
+  /* USER CODE END I2C2_Init 2 */
+
+}
+
+/**
  * Enable DMA controller clock
  */
 static void MX_DMA_Init(void) {
@@ -347,6 +387,9 @@ void CAN_Filter_Config(void) {
 
 /*Battery level read task */
 void Bat_taskF(void *pvParameters) {
+	TickType_t xLastWakeTime;
+	const TickType_t xFrequency = 1000;  //Ticks to wait since routine starts
+	xLastWakeTime = xTaskGetTickCount();
 	while (1) {
 		//buffer[0] = (uint8_t) (analog[0] >> 8) & 0xFF;  //bat CALIBRAR
 		//buffer[1] = (uint8_t) analog[0] & 0xFF;
@@ -369,7 +412,7 @@ void Bat_taskF(void *pvParameters) {
 			Error_Handler();
 		}
 
-		vTaskDelay(1000); /*1Hz frequency*/
+		vTaskDelayUntil(&xLastWakeTime, xFrequency); /*1Hz frequency*/
 	}
 }
 
@@ -398,16 +441,20 @@ void Fuel_taskF(void *pvParameters) {
 			Error_Handler();
 		}
 
-		vTaskDelayUntil(&xLastWakeTime,xFrequency); /*50Hz frequency*/
+		vTaskDelayUntil(&xLastWakeTime, xFrequency); /*50Hz frequency*/
 	}
 }
 
 /*Speed read task */
 void Speed_taskF(void *pvParameters) {
+	TickType_t xLastWakeTime;
+	const TickType_t xFrequency = 10;  //Ticks to wait since routine starts
+	xLastWakeTime = xTaskGetTickCount();
 	while (1) {
 		uint8_t speedbuff[2];
-		speedbuff[0] = (uint8_t) (analog[2] >> 8) & 0xFF;
-		speedbuff[1] = (uint8_t) analog[2] & 0xFF;
+		HAL_I2C_Master_Receive (&hi2c2, (0x4<<1), speedbuff, 2, 10);
+		//speedbuff[0] = (uint8_t) (analog[2] >> 8) & 0xFF;
+		//speedbuff[1] = (uint8_t) analog[2] & 0xFF;
 
 		uint32_t TxMailbox;
 
@@ -423,20 +470,24 @@ void Speed_taskF(void *pvParameters) {
 			Error_Handler();
 		}
 
-		vTaskDelay(10); /*100Hz frequency*/
+		vTaskDelayUntil(&xLastWakeTime, xFrequency); /*100Hz frequency*/
 	}
 }
 
 /*RPM read task */
 void RPM_taskF(void *pvParameters) {
+	TickType_t xLastWakeTime;
+	const TickType_t xFrequency = 10;  //Ticks to wait since routine starts
+	xLastWakeTime = xTaskGetTickCount();
 	while (1) {
 
 		//buffer[6] = (uint8_t) (analog[3] >> 8) & 0xFF;  //rpm CALIBRAR
 		//buffer[7] = (uint8_t) analog[3] & 0xFF;
 
 		uint8_t rpmbuff[2];
-		rpmbuff[0] = (uint8_t) (analog[3] >> 8) & 0xFF;
-		rpmbuff[1] = (uint8_t) analog[3] & 0xFF;
+		HAL_I2C_Master_Receive (&hi2c2, (0x5<<1), rpmbuff, 2, 10);
+		//rpmbuff[0] = (uint8_t) (analog[3] >> 8) & 0xFF;
+		//rpmbuff[1] = (uint8_t) analog[3] & 0xFF;
 
 		uint32_t TxMailbox;
 
@@ -452,12 +503,15 @@ void RPM_taskF(void *pvParameters) {
 			Error_Handler();
 		}
 
-		vTaskDelay(10); /*100Hz frequency*/
+		vTaskDelayUntil(&xLastWakeTime, xFrequency); /*100Hz frequency*/
 	}
 }
 
 /*Temperature read task */
 void Temp_taskF(void *pvParameters) {
+	TickType_t xLastWakeTime;
+	const TickType_t xFrequency = 200;  //Ticks to wait since routine starts
+	xLastWakeTime = xTaskGetTickCount();
 	while (1) {
 		uint8_t tempdata[16];
 
@@ -495,7 +549,7 @@ void Temp_taskF(void *pvParameters) {
 			Error_Handler();
 		}
 
-		vTaskDelay(200); /*5Hz frequency*/
+		vTaskDelayUntil(&xLastWakeTime, xFrequency); /*5Hz frequency*/
 	}
 }
 

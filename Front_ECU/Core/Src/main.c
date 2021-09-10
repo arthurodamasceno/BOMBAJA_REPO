@@ -53,7 +53,7 @@ TaskHandle_t Telemetry_Task;
 uint16_t gas[1];
 uint8_t k = 0;
 uint8_t gear, brake;
-uint8_t startLOG=0 , stopLOG=0;
+uint8_t startLOG = 0, stopLOG = 0;
 uint8_t bsl[22];
 
 uint8_t buffer[22];
@@ -115,6 +115,8 @@ int main(void) {
 	MX_I2C1_Init();
 	MX_USART2_UART_Init();
 	MX_USART1_UART_Init();
+
+	/* USER CODE BEGIN 1 */
 	CAN_Filter_Config();
 
 	if (HAL_CAN_ActivateNotification(&hcan,
@@ -141,6 +143,7 @@ int main(void) {
 
 	/* Start scheduler */
 	vTaskStartScheduler();
+	/* USER CODE END 1 */
 	/* We should never get here as control is now taken by the scheduler */
 
 	/* Infinite loop */
@@ -338,6 +341,7 @@ static void MX_GPIO_Init(void) {
 
 }
 
+/* USER CODE BEGIN 2 */
 /*Configure CAN Filter */
 void CAN_Filter_Config(void) {
 	CAN_FilterTypeDef can_filt;
@@ -392,6 +396,9 @@ void GPS_taskF(void *pvParameters) {
 
 /*Gear an Brake Read Task */
 void Gear_Brake_taskF(void *pvParameters) {
+	TickType_t xLastWakeTime;
+	const TickType_t xFrequency = 10;  //Ticks to wait since routine starts
+	xLastWakeTime = xTaskGetTickCount();
 	while (1) {
 		gear = HAL_GPIO_ReadPin(GPIOB, Gear_Pin);
 		brake = HAL_GPIO_ReadPin(GPIOB, Brake_Pin);
@@ -414,12 +421,15 @@ void Gear_Brake_taskF(void *pvParameters) {
 				!= HAL_OK) {
 			Error_Handler();
 		}
-		vTaskDelay(10); /*100Hz frequency*/
+		vTaskDelayUntil(&xLastWakeTime, xFrequency); /*100Hz frequency*/
 	}
 }
 
 /*Gas pedal Read Task */
 void Gas_taskF(void *pvParameters) {
+	TickType_t xLastWakeTime;
+	const TickType_t xFrequency = 10;  //Ticks to wait since routine starts
+	xLastWakeTime = xTaskGetTickCount();
 	while (1) {
 		uint8_t gasbuff[2];
 		gasbuff[0] = (uint8_t) (gas[0] >> 8) & 0xFF;
@@ -441,35 +451,38 @@ void Gas_taskF(void *pvParameters) {
 				!= HAL_OK) {
 			Error_Handler();
 		}
-		vTaskDelay(10); /*100Hz frequency*/
+		vTaskDelayUntil(&xLastWakeTime, xFrequency); /*100Hz frequency*/
 	}
 }
 
 /*Logger Write Task  --- THIS TASK NEEDS TO IMPLEMENT START AND STOP LOG FUNCTIONS*/
 void Logger_taskF(void *pvParameters) {
+	TickType_t xLastWakeTime;
+	const TickType_t xFrequency = 100;  //Ticks to wait since routine starts
+	xLastWakeTime = xTaskGetTickCount();
 	while (1) {
-		if(startLOG==1){
-			startLOG=0;
-			bsl[1]  = 0xAA;
+		if (startLOG == 1) {
+			startLOG = 0;
+			bsl[1] = 0xAA;
 			bsl[11] = 0xBB;
 			bsl[21] = 0xCC;
-			bsl[0]  = 0x00;
+			bsl[0] = 0x00;
 			bsl[10] = 0x00;
 			bsl[20] = 0x00;
 			HAL_I2C_Master_Transmit(&hi2c1, (0x08 << 1), bsl, 22, 10);
 		}
-		if(stopLOG==1){
-			stopLOG=0;
-			bsl[0]  = 0xDD;
+		if (stopLOG == 1) {
+			stopLOG = 0;
+			bsl[0] = 0xDD;
 			bsl[10] = 0xEE;
 			bsl[20] = 0xFF;
-			bsl[1]  = 0x00;
+			bsl[1] = 0x00;
 			bsl[11] = 0x00;
 			bsl[21] = 0x00;
 			HAL_I2C_Master_Transmit(&hi2c1, (0x08 << 1), bsl, 22, 10);
 		}
 		HAL_I2C_Master_Transmit(&hi2c1, (0x08 << 1), buffer, 22, 10);
-		vTaskDelay(10); /*100Hz frequency*/
+		vTaskDelayUntil(&xLastWakeTime, xFrequency); /*100Hz frequency*/
 	}
 }
 
@@ -499,13 +512,13 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 
 	if (RxHeader.StdId == 0x64E) {
 		//if (rcv_msg[0] == 0x55) {
-			startLOG=1;
+		startLOG = 1;
 		//}
 	}
 
 	if (RxHeader.StdId == 0x64F) {
 		//if (rcv_msg[0] == 0x66) {
-			stopLOG=1;
+		stopLOG = 1;
 		//}
 	}
 
@@ -542,6 +555,8 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 	}
 
 }
+
+/* USER CODE END 2 */
 
 /**
  * @brief  Period elapsed callback in non blocking mode

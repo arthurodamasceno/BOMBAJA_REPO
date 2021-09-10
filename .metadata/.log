@@ -10717,3 +10717,24 @@ Command-line arguments:  -os win32 -ws win32 -arch x86_64 -data D:\BOMBAJA_REPO
 
 !ENTRY com.st.stm32cube.ide.mcu.ide 4 4 2021-08-26 18:38:48.974
 !MESSAGE com.st.stm32cube.ide.mcu.ide/META-INF/version/build_ref file not found, build reference will not be reported into properties
+!SESSION 2021-09-09 13:53:17.538 -----------------------------------------------
+eclipse.buildId=Version 1.5.0
+java.version=1.8.0_272
+java.vendor=AdoptOpenJDK
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=pt_BR
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2021-09-09 13:53:31.960
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2021-09-09 13:53:32.101
+!MESSAGE Log4j initialized with config file D:\BOMBAJA_REPO\.metadata\.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2021-09-09 13:53:44.359
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 4 4 2021-09-09 13:53:45.353
+!MESSAGE com.st.stm32cube.ide.mcu.ide/META-INF/version/build_ref file not found, build reference will not be reported into properties
+
+!ENTRY org.eclipse.cdt.core 1 0 2021-09-09 13:58:24.308
+!MESSAGE Indexed 'controle_temperatura_RTOS' (41 sources, 137 headers) in 5,96 sec: 12.467 declarations; 61.109 references; 2 unresolved inclusions; 37 syntax errors; 188 unresolved names (0,25%)

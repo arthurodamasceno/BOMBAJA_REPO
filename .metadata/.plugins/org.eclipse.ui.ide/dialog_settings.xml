@@ -38,6 +38,7 @@
 		<item key="SmartImportRootWizardPage.STORE_NESTED_PROJECTS" value="true"/>
 		<item key="SmartImportRootWizardPage.STORE_CONFIGURE_NATURES" value="true"/>
 		<list key="org.eclipse.ui.internal.wizards.datatransfer.SmartImportRootWizardPage.knownSources">
+			<item value="D:\BACKUP\Faculdade\16_Embarcados\Controlador_Temperatura\Controle-de-temperatura\Codigos\controle_temperatura_RTOS"/>
 			<item value="D:\ARM Repo"/>
 		</list>
 	</section>
