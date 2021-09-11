@@ -41,7 +41,7 @@ DMA_HandleTypeDef hdma_adc1;
 CAN_HandleTypeDef hcan;
 
 /* USER CODE BEGIN PV */
-I2C_HandleTypeDef hi2c2;
+I2C_HandleTypeDef hi2c1;
 
 TaskHandle_t Bat_Task;
 TaskHandle_t Fuel_Task;
@@ -64,7 +64,7 @@ static void MX_ADC1_Init(void);
 static void MX_CAN_Init(void);
 
 /* USER CODE BEGIN PFP */
-static void MX_I2C2_Init(void);
+static void MX_I2C1_Init(void);
 
 void Bat_taskF(void *pvParameters);
 void Fuel_taskF(void *pvParameters);
@@ -95,7 +95,7 @@ int main(void) {
 	MX_CAN_Init();
 
 	/* USER CODE BEGIN 0 */
-	MX_I2C2_Init();
+	MX_I2C1_Init();
 
 	OD = Flash_Read_NUM(0x0801FC00);
 
@@ -245,36 +245,36 @@ static void MX_CAN_Init(void) {
 }
 
 /**
-  * @brief I2C2 Initialization Function
+  * @brief I2C1 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_I2C2_Init(void)
+static void MX_I2C1_Init(void)
 {
 
-  /* USER CODE BEGIN I2C2_Init 0 */
+  /* USER CODE BEGIN I2C1_Init 0 */
 
-  /* USER CODE END I2C2_Init 0 */
+  /* USER CODE END I2C1_Init 0 */
 
-  /* USER CODE BEGIN I2C2_Init 1 */
+  /* USER CODE BEGIN I2C1_Init 1 */
 
-  /* USER CODE END I2C2_Init 1 */
-  hi2c2.Instance = I2C2;
-  hi2c2.Init.ClockSpeed = 100000;
-  hi2c2.Init.DutyCycle = I2C_DUTYCYCLE_2;
-  hi2c2.Init.OwnAddress1 = 0;
-  hi2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-  hi2c2.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
-  hi2c2.Init.OwnAddress2 = 0;
-  hi2c2.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-  hi2c2.Init.NoStretchMode = I2C_NOSTRETCH_ENABLE;
-  if (HAL_I2C_Init(&hi2c2) != HAL_OK)
+  /* USER CODE END I2C1_Init 1 */
+  hi2c1.Instance = I2C1;
+  hi2c1.Init.ClockSpeed = 100000;
+  hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c1.Init.OwnAddress1 = 0;
+  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c1.Init.OwnAddress2 = 0;
+  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_ENABLE;
+  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN I2C2_Init 2 */
+  /* USER CODE BEGIN I2C1_Init 2 */
 
-  /* USER CODE END I2C2_Init 2 */
+  /* USER CODE END I2C1_Init 2 */
 
 }
 
@@ -452,7 +452,8 @@ void Speed_taskF(void *pvParameters) {
 	xLastWakeTime = xTaskGetTickCount();
 	while (1) {
 		uint8_t speedbuff[2];
-		HAL_I2C_Master_Receive (&hi2c2, (0x4<<1), speedbuff, 2, 10);
+		speedbuff[0]=0;
+		HAL_I2C_Master_Receive (&hi2c1, (0x4<<1), &speedbuff[1], 1, 10);
 		//speedbuff[0] = (uint8_t) (analog[2] >> 8) & 0xFF;
 		//speedbuff[1] = (uint8_t) analog[2] & 0xFF;
 
@@ -485,7 +486,8 @@ void RPM_taskF(void *pvParameters) {
 		//buffer[7] = (uint8_t) analog[3] & 0xFF;
 
 		uint8_t rpmbuff[2];
-		HAL_I2C_Master_Receive (&hi2c2, (0x5<<1), rpmbuff, 2, 10);
+		rpmbuff[0] =0;
+		HAL_I2C_Master_Receive (&hi2c1, (0x5<<1), &rpmbuff[1], 1, 10);
 		//rpmbuff[0] = (uint8_t) (analog[3] >> 8) & 0xFF;
 		//rpmbuff[1] = (uint8_t) analog[3] & 0xFF;
 

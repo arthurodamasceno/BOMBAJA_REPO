@@ -112,7 +112,7 @@ uint8_t calcFreq(unsigned long ft, unsigned long st) {
 
 void requestEvent()
 {
-  TinyWireS.send(frequencia);
+  TinyWireS.send(246);
 }
 
 int main(void) {

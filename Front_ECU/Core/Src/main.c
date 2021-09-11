@@ -2,9 +2,9 @@
  ******************************************************************************
  * @file           : main.c
  * @brief          : Main program body
- * @author			: Arthur Damasceno
- * @team			: Bombaja - UFSM
- * @date			: 16/06/2020
+ * @author		   : Arthur Damasceno
+ * @team		   : Bombaja - UFSM
+ * @date		   : 16/06/2020
  ******************************************************************************
  * @attention
  *

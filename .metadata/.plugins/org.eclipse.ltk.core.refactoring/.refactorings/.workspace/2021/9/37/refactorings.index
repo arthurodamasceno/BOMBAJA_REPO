@@ -1,0 +1,5 @@
+1631302391546	Delete resource 'Front_ECU/SEGGER/SEGGER'
+1631302394913	Delete resource 'Front_ECU/SEGGER/Sample'
+1631302398095	Delete resource 'Front_ECU/SEGGER/Config'
+1631303111149	Delete resource 'Front_ECU/SEGGER/Patch/FreeRTOSv202012.00_segger_cm4_v1.patch'
+1631303117986	Delete resource 'Rear_ECU/SEGGER/Patch/FreeRTOSv202012.00_segger_cm4_v1.patch'
