@@ -28,6 +28,13 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
  ../Core/Inc/FreeRTOSConfig.h \
+ D:/BOMBAJA_REPO/Rear_ECU/Middlewares/Third_Party/SEGGER/OS/SEGGER_SYSVIEW_FreeRTOS.h \
+ D:/BOMBAJA_REPO/Rear_ECU/Middlewares/Third_Party/SEGGER/SEGGER/SEGGER_SYSVIEW.h \
+ D:/BOMBAJA_REPO/Rear_ECU/Middlewares/Third_Party/SEGGER/SEGGER/SEGGER.h \
+ D:/BOMBAJA_REPO/Rear_ECU/Middlewares/Third_Party/SEGGER/Config/Global.h \
+ D:/BOMBAJA_REPO/Rear_ECU/Middlewares/Third_Party/SEGGER/SEGGER/SEGGER_SYSVIEW_ConfDefaults.h \
+ D:/BOMBAJA_REPO/Rear_ECU/Middlewares/Third_Party/SEGGER/Config/SEGGER_SYSVIEW_Conf.h \
+ D:/BOMBAJA_REPO/Rear_ECU/Middlewares/Third_Party/SEGGER/Config/SEGGER_RTT_Conf.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h \
@@ -35,6 +42,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
+ ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h \
+ ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h \
  ../Core/Inc/FLASH_PAGE_F1.h
 
 ../Core/Inc/main.h:
@@ -97,6 +106,20 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 
 ../Core/Inc/FreeRTOSConfig.h:
 
+D:/BOMBAJA_REPO/Rear_ECU/Middlewares/Third_Party/SEGGER/OS/SEGGER_SYSVIEW_FreeRTOS.h:
+
+D:/BOMBAJA_REPO/Rear_ECU/Middlewares/Third_Party/SEGGER/SEGGER/SEGGER_SYSVIEW.h:
+
+D:/BOMBAJA_REPO/Rear_ECU/Middlewares/Third_Party/SEGGER/SEGGER/SEGGER.h:
+
+D:/BOMBAJA_REPO/Rear_ECU/Middlewares/Third_Party/SEGGER/Config/Global.h:
+
+D:/BOMBAJA_REPO/Rear_ECU/Middlewares/Third_Party/SEGGER/SEGGER/SEGGER_SYSVIEW_ConfDefaults.h:
+
+D:/BOMBAJA_REPO/Rear_ECU/Middlewares/Third_Party/SEGGER/Config/SEGGER_SYSVIEW_Conf.h:
+
+D:/BOMBAJA_REPO/Rear_ECU/Middlewares/Third_Party/SEGGER/Config/SEGGER_RTT_Conf.h:
+
 ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h:
 
 ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h:
@@ -110,5 +133,9 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
 
 ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
+
+../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h:
+
+../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h:
 
 ../Core/Inc/FLASH_PAGE_F1.h:

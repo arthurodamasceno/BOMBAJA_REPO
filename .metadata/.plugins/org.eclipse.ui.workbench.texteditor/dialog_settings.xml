@@ -1,32 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="CAN"/>
+		<item key="selection" value="NVIC"/>
 		<item key="wrap" value="false"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="NVIC"/>
+			<item value="Toggle"/>
+			<item value="GPIO_PIN_13"/>
+			<item value="buffer_s"/>
+			<item value="buffer"/>
+			<item value="655"/>
+			<item value="ulMaxPRIGROUPValue"/>
+			<item value="ucMaxSysCallPriority"/>
+			<item value="lat"/>
+			<item value="Base"/>
+			<item value="configMAX_SYSCALL_INTERRUPT_PRIORITY"/>
+			<item value="AHB1"/>
+			<item value="RTT_B"/>
 			<item value="can"/>
 			<item value="CAN_In"/>
-			<item value="Inter"/>
-			<item value="CAN_Inte"/>
-			<item value="CAN_I"/>
-			<item value="CAN_remote_transmission_request"/>
-			<item value="CAN_operating_mode"/>
-			<item value="Toggl"/>
-			<item value="togg"/>
-			<item value="Can_Interrupts"/>
-			<item value="Can_Interruts"/>
-			<item value="can_Interruts"/>
 		</list>
 		<list key="replacehistory">
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item key="DIALOG_X_ORIGIN" value="801"/>
-		<item key="DIALOG_Y_ORIGIN" value="222"/>
+		<item key="DIALOG_X_ORIGIN" value="1408"/>
+		<item key="DIALOG_Y_ORIGIN" value="133"/>
 		<item key="DIALOG_WIDTH" value="336"/>
 		<item key="DIALOG_HEIGHT" value="454"/>
 		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>

@@ -14,6 +14,8 @@ volatile unsigned long finishTime;
 uint32_t ZEROU = 0;
 uint8_t frequencia = 0;
 
+uint8_t aux;
+
 void initSetup() {
 
   DDRB  = B00000000;
@@ -112,7 +114,8 @@ uint8_t calcFreq(unsigned long ft, unsigned long st) {
 
 void requestEvent()
 {
-  TinyWireS.send(246);
+  aux--;
+  TinyWireS.send(aux);
 }
 
 int main(void) {

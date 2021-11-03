@@ -3,7 +3,7 @@
 #include "Wire.h"
 
 static uint32_t startMicros;
-uint8_t buff[22];
+uint8_t buff[26];
 
 uint8_t FLAG = 0;
 uint32_t s=0;
@@ -20,9 +20,9 @@ void acquireData(data_t* data) {
   data->dados[5]  = (buff[8] << 8)  | (buff[9] & 0xff);
   data->dados[6]  = (buff[10] << 8) | (buff[11] & 0xff);
   data->dados[7]  = (buff[12] << 8) | (buff[13] & 0xff);
-  data->dados[8]  = (buff[14] << 8) | (buff[15] << 8)   | (buff[16] << 8) | (buff[17] & 0xff);
-  data->dados[9]  = (buff[18] << 8) | (buff[19] & 0xff);
-  data->dados[10] = (buff[20] << 8) | (buff[21] & 0xff);
+  data->dados[8]  = (buff[14] << 24) | (buff[15] << 16)   | (buff[16] << 8) | (buff[17] & 0xff);
+  data->dados[9]  = (buff[18] << 24) | (buff[19] << 16)   | (buff[20] << 8) | (buff[21] & 0xff);
+  data->dados[10] = (buff[22] << 24) | (buff[23] << 16)   | (buff[24] << 8) | (buff[25] & 0xff);
 }
 
 

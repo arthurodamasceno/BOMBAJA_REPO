@@ -10,12 +10,12 @@ void printData(FILE* pr, data_t* data) {
 	if (startMicros == 0) {
 		startMicros = data->time;
 	}
-	fprintf(pr, "%d", data->sample);
+	fprintf(pr, "%u", data->sample);
 	
-	fprintf(pr, ",%d", data->time - startMicros);
+	fprintf(pr, ",%u", data->time - startMicros);
 	for (int i = 0; i < ADC_DIM; i++) {
 		unsigned adc = data->adc[i];
-		fprintf(pr, ",%d.0", adc);
+		fprintf(pr, ",%u.0", adc);
 	}
 	fprintf(pr, "\n");
 }

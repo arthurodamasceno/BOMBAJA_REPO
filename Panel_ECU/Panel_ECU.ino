@@ -1,15 +1,22 @@
 #include <SPI.h>
 #include <mcp2515.h>
+#include <EEPROM.h>
+
+#define FUEL_LED 9
 
 uint8_t gear, brake;
-uint16_t temp, vel, rpm, fuel, bat, lat, lon, gas;
+uint16_t temp, vel, rpm, fuel, bat, gas;
 uint32_t odometer;
+
+int32_t lat,lon;
 
 bool FLAG = false;
 bool INIT = false;
+bool od = false;
 
 struct can_frame INIT_LOG;
 struct can_frame STOP_LOG;
+struct can_frame OD_LOG;
 
 uint32_t anterior;
 
@@ -40,6 +47,27 @@ int dataPin = 2;
 
 struct can_frame canMsg;
 MCP2515 mcp2515(10);
+
+unsigned long EEPROMReadlong(long address) {
+  unsigned long four = EEPROM.read(address);
+  unsigned long three = EEPROM.read(address + 1);
+  unsigned long two = EEPROM.read(address + 2);
+  unsigned long one = EEPROM.read(address + 3);
+
+  return ((four << 0) & 0xFF) + ((three << 8) & 0xFFFF) + ((two << 16) & 0xFFFFFF) + ((one << 24) & 0xFFFFFFFF);
+}
+
+void EEPROMWritelong(int address, unsigned long value) {
+  byte four = (value & 0xFF);
+  byte three = ((value >> 8) & 0xFF);
+  byte two = ((value >> 16) & 0xFF);
+  byte one = ((value >> 24) & 0xFF);
+
+  EEPROM.write(address, four);
+  EEPROM.write(address + 1, three);
+  EEPROM.write(address + 2, two);
+  EEPROM.write(address + 3, one);
+}
 
 void TFT_val(const char* nome, uint32_t valor) //RPM,marcha,battery,pitch,roll
 {
@@ -74,6 +102,9 @@ ISR(PCINT1_vect) {
 }
 
 void setup() {
+  
+  EEPROMWritelong(0, 0);
+  
   INIT_LOG.can_id  = 0x64E;
   INIT_LOG.can_dlc = 1;
   INIT_LOG.data[0] = 0x55;
@@ -81,6 +112,9 @@ void setup() {
   STOP_LOG.can_id  = 0x64F;
   STOP_LOG.can_dlc = 1;
   STOP_LOG.data[0] = 0x66;
+
+  OD_LOG.can_id  = 0x655;
+  OD_LOG.can_dlc = 4;
 
   cli();
   //Equivalente a pinMode(A0, INPUT_PULLUP)
@@ -97,6 +131,7 @@ void setup() {
   pinMode(latchPin, OUTPUT);
   pinMode(shiftPin, OUTPUT);
   pinMode(dataPin, OUTPUT);
+  pinMode(FUEL_LED,OUTPUT);
 
   mcp2515.reset();
   mcp2515.setBitrate(CAN_250KBPS, MCP_8MHZ);
@@ -121,12 +156,15 @@ void loop() {
     if (canMsg.can_id == 0x650) {
       bat = (canMsg.data[0] << 8) | (canMsg.data[1] & 0xff);
     }
-    if (canMsg.can_id == 0x655) {
-      odometer = (canMsg.data[0] << 24) | (canMsg.data[1] << 16) | (canMsg.data[2] << 8) | (canMsg.data[3] & 0xff);
+    // if (canMsg.can_id == 0x655) {
+    //   odometer = (canMsg.data[0] << 24) | (canMsg.data[1] << 16) | (canMsg.data[2] << 8) | (canMsg.data[3] & 0xff);
+    //}
+    if (canMsg.can_id == 0x664) {
+      lat = (canMsg.data[0] << 24) | (canMsg.data[1] << 16) | (canMsg.data[2] << 8) | (canMsg.data[3] & 0xff);
+      
     }
-    if (canMsg.can_id == 0x658) {
-      lat = (canMsg.data[0] << 8) | (canMsg.data[1] & 0xff);
-      lon = (canMsg.data[2] << 8) | (canMsg.data[3] & 0xff);
+    if (canMsg.can_id == 0x665) {
+      lon = (canMsg.data[0] << 24) | (canMsg.data[1] << 16) | (canMsg.data[2] << 8) | (canMsg.data[3] & 0xff);
     }
     if (canMsg.can_id == 0x657) {
       gear =  (canMsg.data[0] & 0xff);
@@ -134,6 +172,11 @@ void loop() {
     }
     if (canMsg.can_id == 0x656) {
       gas = (canMsg.data[0] << 8) | (canMsg.data[1] & 0xff);
+    }
+    if (canMsg.can_id == 0x666) {
+      if (canMsg.data[0] == 0x44) {
+        od = true;
+      }
     }
   }
 
@@ -153,6 +196,8 @@ void loop() {
   }
 
   ligaLeds(map(rpm, 0, 4095, 0, 16));
+  if(fuel<=15)digitalWrite(FUEL_LED,HIGH);
+  if(fuel>15)digitalWrite(FUEL_LED,LOW);
 
   if (FLAG && !INIT) {
     mcp2515.sendMessage(&INIT_LOG);
@@ -163,5 +208,18 @@ void loop() {
     mcp2515.sendMessage(&STOP_LOG);
     INIT = false;
     FLAG = false;
+  }
+
+  if (od) {
+    od = false;
+    odometer = EEPROMReadlong(0);
+    odometer += 100;
+    EEPROMWritelong(0, odometer);
+    OD_LOG.data[0] = (uint8_t) (odometer >> 24) & 0xFF;
+    OD_LOG.data[1] = (uint8_t) (odometer >> 16) & 0xFF;
+    OD_LOG.data[2] = (uint8_t) (odometer >> 8) & 0xFF;
+    OD_LOG.data[3] = (uint8_t) odometer & 0xFF;
+    
+    mcp2515.sendMessage(&OD_LOG);
   }
 }

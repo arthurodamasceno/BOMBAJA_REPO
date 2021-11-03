@@ -3,6 +3,7 @@ content_assist_disabled_computers=org.eclipse.cdt.ui.textProposalCategory\u0000
 content_assist_proposals_timeout=5000
 eclipse.preferences.version=1
 scalability.contentAssistAutoActivation=true
+scalability.detect=false
 scalability.reconciler=false
 sourceHoverBackgroundColor=255,255,225
 spelling_locale_initialized=true

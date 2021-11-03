@@ -1,5 +1,6 @@
 #include <Arduino_FreeRTOS.h>
 #include <semphr.h>
+#include <task.h>
 
 #include <SPI.h>
 #include <mcp2515.h>
@@ -17,6 +18,11 @@ struct can_frame STOP_LOG;
 uint32_t anterior;
 
 SemaphoreHandle_t interruptSemaphore;
+
+void buttonCommand( void *pvParameters );
+void displayWrite( void *pvParameters );
+void ledWrite( void *pvParameters );
+void canReceive( void *pvParameters );
 
 byte leds[17][16] = {
   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, //0
@@ -75,7 +81,7 @@ ISR(PCINT1_vect) {
   }
   else { // A0 mudou de HIGH para LOW;
     FLAG = true;
-    xSemaphoreGiveFromISR(interruptSemaphore, NULL);
+    xSemaphoreGive(interruptSemaphore);
   }
 }
 
@@ -89,24 +95,24 @@ void setup() {
   STOP_LOG.data[0] = 0x66;
 
   Serial.begin(115200);
-
+  Serial.println('1');
   pinMode(latchPin, OUTPUT);
   pinMode(shiftPin, OUTPUT);
   pinMode(dataPin, OUTPUT);
-
+  Serial.println('2');
   mcp2515.reset();
   mcp2515.setBitrate(CAN_250KBPS, MCP_8MHZ);
   mcp2515.setNormalMode();
-
-  xTaskCreate(buttonCommand, "button", 128, NULL, 4, NULL );
-  xTaskCreate(displayWrite, "tft", 128, NULL, 3, NULL );
-  xTaskCreate(ledWrite, "Leds", 128, NULL, 2, NULL );
-  xTaskCreate(canReceive, "CAN", 128, NULL, 1, NULL );
-
+  Serial.println('3');
+  xTaskCreate(buttonCommand, "button", 192, NULL, 4, NULL );
+  xTaskCreate(displayWrite, "tft", 192, NULL, 3, NULL );
+  xTaskCreate(ledWrite, "Leds", 192, NULL, 2, NULL );
+  xTaskCreate(canReceive, "CAN", 192, NULL, 1, NULL );
+  Serial.println('4');
   interruptSemaphore = xSemaphoreCreateBinary();
-  if (interruptSemaphore != NULL) {
+  //if (interruptSemaphore != NULL) {
     // Attach interrupt for Arduino digital pin
-    cli();
+   // cli();
 
     //Equivalente a pinMode(A0, INPUT_PULLUP)
     DDRC &= ~(1 << DDC0); // Seta A0 como entrada;
@@ -115,16 +121,19 @@ void setup() {
     //setup PCINT8
     PCICR |= (1 << PCIE1);
     PCMSK1 |= (1 << PCINT8);
-    sei();
-  }
+ //   sei();
+  //}
+  Serial.println('5');
+ // vTaskStartScheduler();
+  
 }
 
-void loop() {}
+
 
 void canReceive(void *pvParameters)
 {
   (void) pvParameters;
-
+  Serial.println("can");
   for (;;) {
     if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK) {
 
@@ -159,14 +168,15 @@ void canReceive(void *pvParameters)
       }
     }
 
-    vTaskDelay(10);
+    vTaskDelay(1);
   }
 }
 
 void displayWrite(void *pvParameters)
 {
   (void) pvParameters;
-
+  
+  Serial.println("disp");
   for (;;) {
 
     TFT_val("gear", gear);
@@ -180,24 +190,27 @@ void displayWrite(void *pvParameters)
     TFT_val("odometer", odometer);
     TFT_val("lat", lat);
     TFT_val("lon", lon);
-    vTaskDelay(200);
+    vTaskDelay(13);
   }
 }
 
 void ledWrite(void *pvParameters)
 {
   (void) pvParameters;
-
+  
+  Serial.println("led");
   for (;;) {
 
     ligaLeds(map(rpm, 0, 4095, 0, 16));
-    vTaskDelay(20);
+    vTaskDelay(1);
   }
 }
 
 void buttonCommand(void *pvParameters)
 {
   (void) pvParameters;
+  
+  Serial.println("button");
   for (;;) {
     if (xSemaphoreTake(interruptSemaphore, portMAX_DELAY) == pdPASS) {
       if (FLAG && !INIT) {
@@ -211,6 +224,10 @@ void buttonCommand(void *pvParameters)
         FLAG = false;
       }
     }
-    vTaskDelay(10);
+    vTaskDelay(1);
   }
 }
+
+void loop() {
+  Serial.println("loop");
+  }

@@ -1,0 +1,5 @@
+1631555827318	Delete resource 'Front_ECU/SEGGER'
+1631555831106	Delete resource 'Rear_ECU/SEGGER'
+1631558097779	Delete resource 'Front_ECU/Middlewares/SEGGER'
+1631558574872	Delete resource 'Front_ECU/Middlewares/Third_Party/FreeRTOS'
+1631558579111	Delete resource 'Rear_ECU/Middlewares/Third_Party/FreeRTOS'
