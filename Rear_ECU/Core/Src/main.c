@@ -561,11 +561,14 @@ void Temp_taskF(void *pvParameters) {
 		CSdis
 
 		if (tempdata[13] == 0) {
-			temp16 = tempdata[1] * 2048 + tempdata[2] * 1024 + tempdata[3] * 512
-					+ tempdata[4] * 256 + tempdata[5] * 128 + tempdata[6] * 64;
-			temp16 = temp16 + tempdata[7] * 32 + tempdata[8] * 16
-					+ tempdata[9] * 8 + tempdata[10] * 4 + tempdata[11] * 2
-					+ tempdata[12];
+			/*temp16 = tempdata[1] * 2048 + tempdata[2] * 1024 + tempdata[3] * 512
+			 + tempdata[4] * 256 + tempdata[5] * 128 + tempdata[6] * 64;
+			 temp16 = temp16 + tempdata[7] * 32 + tempdata[8] * 16
+			 + tempdata[9] * 8 + tempdata[10] * 4 + tempdata[11] * 2
+			 + tempdata[12];*/
+			for (int n = 1; n < 13; n++) {
+				temp16 += tempdata[n] * (2048 / (1 << (n - 1)));
+			}
 		}
 
 		uint8_t tempbuff[2];
