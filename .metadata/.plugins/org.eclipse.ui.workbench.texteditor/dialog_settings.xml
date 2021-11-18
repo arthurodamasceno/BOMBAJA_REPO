@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="NVIC"/>
+		<item key="selection" value="SIZE"/>
 		<item key="wrap" value="false"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="size"/>
 			<item value="NVIC"/>
 			<item value="Toggle"/>
 			<item value="GPIO_PIN_13"/>
@@ -22,7 +23,6 @@
 			<item value="AHB1"/>
 			<item value="RTT_B"/>
 			<item value="can"/>
-			<item value="CAN_In"/>
 		</list>
 		<list key="replacehistory">
 		</list>
