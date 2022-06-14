@@ -1,0 +1,232 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MindFusion.Pdf</name>
+    </assembly>
+    <members>
+        <member name="F:MindFusion.Pdf.ChineseEncoder.GB_EUC_H">
+            <summary>
+            Microsoft Code Page 936 (lfCharSet 0x86), GB 2312-80 character set, EUC-CN encoding
+            </summary>
+        </member>
+        <member name="F:MindFusion.Pdf.ChineseEncoder.GB_EUC_V">
+            <summary>
+            Vertical version of GB_EUC_H
+            </summary>
+        </member>
+        <member name="F:MindFusion.Pdf.ChineseEncoder.GBK_EUC_H">
+            <summary>
+            Microsoft Code Page 936 (lfCharSet 0x86), GBK character set, GBK encoding
+            </summary>
+        </member>
+        <member name="F:MindFusion.Pdf.ChineseEncoder.GBK_EUC_V">
+            <summary>
+            Vertical version of GBK_EUC_H
+            </summary>
+        </member>
+        <member name="F:MindFusion.Pdf.ChineseEncoder.UniGB_UCS2_H">
+            <summary>
+            Unicode (UCS-2) encoding for the Adobe-GB1 character collection
+            </summary>
+        </member>
+        <member name="F:MindFusion.Pdf.ChineseEncoder.UniGB_UCS2_V">
+            <summary>
+            Vertical version of UniGB_UCS2_H
+            </summary>
+        </member>
+        <member name="F:MindFusion.Pdf.ChineseEncoder.UniGB_UTF16_H">
+            <summary>
+            Unicode (UTF-16BE) encoding for the Adobe-GB1 character collection; 
+            contains mappings for all characters in the GB18030-2000 character set
+            </summary>
+        </member>
+        <member name="F:MindFusion.Pdf.ChineseEncoder.UniGB_UTF16_V">
+            <summary>
+            Vertical version of UniGB_UTF16_H
+            </summary>
+        </member>
+        <member name="T:MindFusion.Pdf.FontRecords">
+            <summary>
+            Used to serialize and deserialize cached font attributes.
+            </summary>
+        </member>
+        <member name="T:MindFusion.Pdf.FontRecord">
+            <summary>
+            Contains cached font attributes.
+            </summary>
+        </member>
+        <member name="M:MindFusion.Pdf.MultilangTools.#cctor">
+            <summary>
+            Static constructor that fills the default preferred codepages
+            </summary>
+        </member>
+        <member name="M:MindFusion.Pdf.MultilangTools.IsAscii(System.String)">
+            <summary>
+            Checks if specified string data is acii data.
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MindFusion.Pdf.MultilangTools.GetMostEfficientEncoding(System.String)">
+            <summary>
+            Gets the best Encoding for usage in mime encodings
+            </summary>
+            <param name="input">text to detect</param>
+            <returns>the suggested encoding</returns>
+        </member>
+        <member name="M:MindFusion.Pdf.MultilangTools.GetMostEfficientEncodingForStream(System.String)">
+            <summary>
+            Gets the best ISO Encoding for usage in a stream
+            </summary>
+            <param name="input">text to detect</param>
+            <returns>the suggested encoding</returns>
+        </member>
+        <member name="M:MindFusion.Pdf.MultilangTools.GetMostEfficientEncoding(System.String,System.Int32[])">
+            <summary>
+            Gets the best fitting encoding from a list of possible encodings
+            </summary>
+            <param name="input">text to detect</param>
+            <param name="preferedEncodings">an array of codepages</param>
+            <returns>the suggested encoding</returns>
+        </member>
+        <member name="M:MindFusion.Pdf.MultilangTools.DetectInputCodepage(System.Byte[])">
+            <summary>
+            Detect the most probable codepage from an byte array
+            </summary>
+            <param name="input">array containing the raw data</param>
+            <returns>the detected encoding or the default encoding if the detection failed</returns>
+        </member>
+        <member name="M:MindFusion.Pdf.MultilangTools.DetectInputCodepages(System.Byte[],System.Int32)">
+            <summary>
+            Rerurns up to maxEncodings codpages that are assumed to be apropriate
+            </summary>
+            <param name="input">array containing the raw data</param>
+            <param name="maxEncodings">maxiumum number of encodings to detect</param>
+            <returns>an array of Encoding with assumed encodings</returns>
+        </member>
+        <member name="M:MindFusion.Pdf.MultilangTools.ReadTextFile(System.String)">
+            <summary>
+            Opens a text file and returns the content 
+            encoded in the most probable encoding
+            </summary>
+            <param name="path">path to the souce file</param>
+            <returns>the text content of the file</returns>
+        </member>
+        <member name="M:MindFusion.Pdf.MultilangTools.OpenTextFile(System.String)">
+            <summary>
+            Returns a stream reader for the given
+            text file with the best encoding applied
+            </summary>
+            <param name="path">path to the file</param>
+            <returns>a StreamReader for the file</returns>
+        </member>
+        <member name="M:MindFusion.Pdf.MultilangTools.OpenTextStream(System.IO.Stream)">
+            <summary>
+            Creates a stream reader from a stream and detects
+            the encoding form the first bytes in the stream
+            </summary>
+            <param name="stream">a stream to wrap</param>
+            <returns>the newly created StreamReader</returns>
+        </member>
+        <member name="P:MindFusion.Pdf.PdfFont.Flags">
+            <summary>
+            1 0x1 FixedPitch All glyphs have the same width (as opposed to proportional or variable-pitch fonts, which have different widths).
+            2 0x2 Serif Glyphs have serifs, which are short strokes drawn at an angle on the top and bottom of glyph stems (as opposed to sans serif fonts, which do not).
+            3 0x4 Symbolic Font c ontains glyphs outside the Adobe standard Latin character set. This flag and the Nonsymbolic flag cannot both be set or both be clear (see below).
+            4 0x8 Script Glyphs resemble cursive handwriting. 
+            6 0x20 Nonsymbolic Font uses the Adobe standard Latin character set or a subset of it (see below).
+            7 0x40 Italic Glyphs have dominant vertical strokes that are slanted.
+            17 AllCap Font contains no lowercase letters; typically used for display purposes such as titles or headlines.
+            18 SmallCap Font contains both uppercase and lowercase letters. The uppercase letters are similar to ones in the regular version of the same typeface family. The glyphs for the lowercase letters have the same shapes as the corresponding uppercase letters, but they are sized and their proportions adjusted so that they have the same size and stroke weight as lowercase glyphs in the same typeface family.
+            19 ForceBold See below.
+            </summary>
+        </member>
+        <member name="M:MindFusion.Pdf.PdfGraphics.ReArrange(System.Drawing.RectangleF)">
+            <summary>
+            Sets default layout rectangle after change of measure unit.
+            </summary>
+            <param name="layoutRect">Default layout rectangle in logical coordinates.</param>
+        </member>
+        <member name="P:MindFusion.Pdf.PdfGraphics.KeepPostScriptCompatibility">
+            <summary>
+            A work-around for Adobe Reader V9 bug when printing to Postscript printers.
+            </summary>
+        </member>
+        <member name="M:MindFusion.Pdf.PdfGraphics.Restore(System.Drawing.Drawing2D.GraphicsState)">
+            <summary>
+            Attention: gstate argument is ignored, save/restore calls should always be paired.
+            </summary>
+        </member>
+        <member name="P:MindFusion.Pdf.PdfGraphics.ImagesAsJPEG">
+            <summary>
+            If true, all images are being saved in JPEG format
+            </summary>
+        </member>
+        <member name="P:MindFusion.Pdf.PdfGraphics.ImageQuality">
+            <summary>
+            A quality level of 0 corresponds to the greatest compression, and a quality level of 100 corresponds to the least compression.
+            </summary>
+        </member>
+        <member name="P:MindFusion.Pdf.PdfGraphics.JpegColorDepth">
+            <summary>
+            Color depth ( in bits ) for the JPEG images to be created. Must be between 1 and 64
+            </summary>
+        </member>
+        <member name="M:MindFusion.Pdf.PdfObjectComparer.Compare(System.Object,System.Object)">
+            <summary>
+            Compares 2 objects by their properties, given on the constructor
+            </summary>
+            <param name="x">First value to compare</param>
+            <param name="y">Second value to compare</param>
+            <returns></returns>
+        </member>
+        <member name="M:MindFusion.Pdf.HexEncoding.GetBytes(System.String,System.Int32@)">
+            <summary>
+            Creates a byte array from the hexadecimal string. Each two characters are combined
+            to create one byte. First two hexadecimal characters become first byte in returned array.
+            Non-hexadecimal characters are ignored. 
+            </summary>
+            <param name="hexString">string to convert to byte array</param>
+            <param name="discarded">number of characters in string ignored</param>
+            <returns>byte array, in the same left-to-right order as the hexString</returns>
+        </member>
+        <member name="M:MindFusion.Pdf.HexEncoding.InHexFormat(System.String)">
+            <summary>
+            Determines if given string is in proper hexadecimal string format
+            </summary>
+            <param name="hexString"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MindFusion.Pdf.HexEncoding.IsHexDigit(System.Char)">
+            <summary>
+            Returns true is c is a hexadecimal digit (A-F, a-f, 0-9)
+            </summary>
+            <param name="c">Character to test</param>
+            <returns>true if hex digit, false if not</returns>
+        </member>
+        <member name="M:MindFusion.Pdf.HexEncoding.HexToByte(System.String)">
+            <summary>
+            Converts 1 or 2 character string into equivalant byte value
+            </summary>
+            <param name="hex">1 or 2 character string</param>
+            <returns>byte</returns>
+        </member>
+        <member name="M:MindFusion.Pdf.Tools.ReleaseDC(System.IntPtr,System.IntPtr)">
+            <summary>
+            ReleaseDC import.
+            </summary>
+        </member>
+        <member name="F:MindFusion.Pdf.Tools.ABCFloat.abcfA">
+            <summary>Specifies the A spacing of the character. The A spacing is the distance to add to the current
+            position before drawing the character glyph.</summary>
+        </member>
+        <member name="F:MindFusion.Pdf.Tools.ABCFloat.abcfB">
+            <summary>Specifies the B spacing of the character. The B spacing is the width of the drawn portion of
+            the character glyph.</summary>
+        </member>
+        <member name="F:MindFusion.Pdf.Tools.ABCFloat.abcfC">
+            <summary>Specifies the C spacing of the character. The C spacing is the distance to add to the current
+            position to provide white space to the right of the character glyph.</summary>
+        </member>
+    </members>
+</doc>

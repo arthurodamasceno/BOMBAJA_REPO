@@ -1,0 +1,245 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MindFusion.Svg</name>
+    </assembly>
+    <members>
+        <member name="M:MindFusion.Svg.GdiHelper.CartesianToPolar(System.Drawing.PointF,System.Drawing.PointF,System.Single@,System.Single@)">
+            <summary>
+            Converts Cartesian coordinates to the corresponding
+            polar coordinates, using the specified point as
+            a center of the coordinate system.
+            </summary>
+        </member>
+        <member name="M:MindFusion.Svg.GdiHelper.PolarToCartesian(System.Drawing.PointF,System.Single,System.Single,System.Drawing.PointF@)">
+            <summary>
+            Converts polar coordinates to the corresponding
+            Cartesian coordinates, using the specified point as
+            a center of the coordinate system.
+            </summary>
+        </member>
+        <member name="M:MindFusion.Svg.GdiHelper.GetEllipseIntr(System.Drawing.RectangleF,System.Drawing.PointF,System.Drawing.PointF,System.Drawing.PointF@)">
+            <summary>
+            Calculate the intersection point between the ellipse
+            with the specified bounds and the line segment defined
+            by the specified points.
+            </summary>
+        </member>
+        <member name="M:MindFusion.Svg.Svg.Draw(MindFusion.Drawing.IGraphics,System.Single,System.Single)">
+            <summary>
+            Draws the SVG in the specified Graphics.
+            </summary>
+        </member>
+        <member name="P:MindFusion.Svg.Svg.IsOutermost">
+            <summary>
+            Gets or sets a value indicating whether this Svg is the top-level SVG element.
+            </summary>
+        </member>
+        <member name="M:MindFusion.Svg.SvgGraphics.AddPath(System.String)">
+            <summary>
+            Adds  new "path" nod to SVG file
+            </summary>
+            <returns>Returns recently added to SVG XML "path" node</returns>
+        </member>
+        <member name="M:MindFusion.Svg.SvgGraphics.AddPath(System.String,System.String)">
+            <summary>
+            Adds  new "path" nod to SVG file
+            </summary>
+            <param name="PathData">String path data in SVG format</param>
+            <param name="sStrokeWidth">Frame with</param>
+            <returns>Returns recently added to SVG XML "path" node</returns>
+        </member>
+        <member name="M:MindFusion.Svg.SvgGraphics.AddPath(System.String,System.String,System.Drawing.Color)">
+            <summary>
+            Adds  new "path" nod to SVG file
+            </summary>
+            <param name="PathData">String path data in SVG format</param>
+            <param name="sStrokeWidth">Frame with</param>
+            <param name="colStroke">Frame color</param>
+            <returns>Returns recently added to SVG XML "path" node</returns>
+        </member>
+        <member name="M:MindFusion.Svg.SvgGraphics.AddPath(System.String,System.String,System.Drawing.Color,System.Drawing.Color)">
+            <summary>
+            Adds  new "path" nod to SVG file
+            </summary>
+            <param name="PathData">String path data in SVG format</param>
+            <param name="sStrokeWidth">Frame with</param>
+            <param name="colStroke">Frame color</param>
+            <param name="colFill">Fill color</param>
+            <returns>Returns recently added to SVG XML "path" node</returns>
+        </member>
+        <member name="M:MindFusion.Svg.SvgGraphics.AddRect(System.String,System.String,System.String,System.String,System.String,System.Drawing.Color,System.Drawing.Color)">
+            <summary>
+            Adds new "rect" node to SVG
+            </summary>
+            <param name="sX">X - coord of the node</param>
+            <param name="sY">Y - coord of the node</param>
+            <param name="sWidth">Node width</param>
+            <param name="sHeight">Node heaignt</param>
+            <param name="sStrokeWidth">Frame width</param>
+            <param name="colFill">Fill color</param>
+            <param name="colStroke">Frame color</param>
+            <returns>Returns recently added to SVG XML "rect" node</returns>
+        </member>
+        <member name="M:MindFusion.Svg.SvgGraphics.AddRect(System.String,System.String,System.String,System.String,System.String,System.Drawing.Color,System.Drawing.Color,System.String,System.String)">
+            <summary>
+            Adds new "rect" node to SVG
+            </summary>
+            <param name="sX">X - coord of the node</param>
+            <param name="sY">Y - coord of the node</param>
+            <param name="sWidth">Node width</param>
+            <param name="sHeight">Node heaignt</param>
+            <param name="sStrokeWidth">Frame width</param>
+            <param name="colFill">Fill color</param>
+            <param name="colStroke">Frame color</param>
+            <param name="sRX">Bounds Z-size ( for bounding rects )</param>
+            <param name="sRY">Bounds Y-size ( for bounding rects )</param>
+            <returns>Returns recently added to SVG XML "rect" node</returns>
+        </member>
+        <member name="M:MindFusion.Svg.SvgGraphics.AddRect(System.String,System.String,System.String,System.String,System.String,System.Drawing.Color,System.Drawing.Color,System.String,System.String,System.Drawing.Image)">
+            <summary>
+            Adds new "rect" node to SVG
+            </summary>
+            <param name="sX">X - coord of the node</param>
+            <param name="sY">Y - coord of the node</param>
+            <param name="sWidth">Node width</param>
+            <param name="sHeight">Node heaignt</param>
+            <param name="sStrokeWidth">Frame width</param>
+            <param name="colFill">Fill color</param>
+            <param name="colStroke">Frame color</param>
+            <param name="sRX">Bounds Z-size ( for bounding rects )</param>
+            <param name="sRY">Bounds Y-size ( for bounding rects )</param>
+            <param name="newImg">Node image(if any exists NULL otherwise)</param>
+            <returns>Returns recently added to SVG XML "rect" node</returns>
+        </member>
+        <member name="M:MindFusion.Svg.SvgGraphics.AddRect(System.String,System.String,System.String,System.String,System.String,System.Drawing.Color,System.Drawing.Color,System.String,System.String,System.Drawing.Image,System.Drawing.Color)">
+            <summary>
+            Adds new "rect" node to SVG
+            </summary>
+            <param name="sX">X - coord of the node</param>
+            <param name="sY">Y - coord of the node</param>
+            <param name="sWidth">Node width</param>
+            <param name="sHeight">Node heaignt</param>
+            <param name="sStrokeWidth">Frame width</param>
+            <param name="colFill">Fill color</param>
+            <param name="colStroke">Frame color</param>
+            <param name="sRX">Bounds Z-size ( for bounding rects )</param>
+            <param name="sRY">Bounds Y-size ( for bounding rects )</param>
+            <param name="newImg">Node image(if any exists NULL otherwise)</param>
+            <param name="Color2Repl">Color to replace transparent one in the image</param>
+            <returns>Returns recently added to SVG XML "rect" node</returns>
+        </member>
+        <member name="M:MindFusion.Svg.SvgGraphics.AddRect(System.String,System.String,System.String,System.String,System.String,System.Drawing.Color,System.Drawing.Color,System.String,System.String,System.Drawing.Image,MindFusion.Svg.ImageAlign,System.Drawing.RectangleF)">
+            <summary>
+            Adds new "rect" node to SVG
+            </summary>
+            <param name="sX">X - coord of the node</param>
+            <param name="sY">Y - coord of the node</param>
+            <param name="sWidth">Node width</param>
+            <param name="sHeight">Node heaignt</param>
+            <param name="sStrokeWidth">Frame width</param>
+            <param name="colFill">Fill color</param>
+            <param name="colStroke">Frame color</param>
+            <param name="sRX">Bounds Z-size ( for bounding rects )</param>
+            <param name="sRY">Bounds Y-size ( for bounding rects )</param>
+            <param name="newImg">Node image(if any exists NULL otherwise)</param>
+            <param name="Color2Repl">Color to replace transparent one in the image</param>
+            <returns>Returns recently added to SVG XML "rect" node</returns>
+        </member>
+        <member name="P:MindFusion.Svg.SvgGraphics.FlattenPaths">
+            <summary>
+            If this property is set to TRUE the curves are being flattened before export
+            </summary>
+        </member>
+        <member name="P:MindFusion.Svg.SvgGraphics.FlattenQuality">
+            <summary>
+            Specifies the maximum permitted error between the curve and its flattened approximation. 
+            A value of 0.25 is the default. Reducing the flatness value will increase the number of 
+            line segments in the approximation. 
+            </summary>
+        </member>
+        <member name="F:MindFusion.Svg.SvgHelper.dpi">
+            <summary>
+            Precalculated DPI.
+            </summary>
+        </member>
+        <member name="P:MindFusion.Svg.SvgContent.SvgElement">
+            <summary>
+            Returns the toplevel svg XmlElement. Intended to be used only for reading
+            </summary>
+        </member>
+        <member name="M:MindFusion.Svg.SvgContent.Parse(System.Xml.XmlNodeList)">
+            <summary>
+            Parse the given svg elements
+            </summary>
+            <param name="xmlElements"></param>
+        </member>
+        <member name="M:MindFusion.Svg.SvgContent.Parse(System.Xml.XmlNodeList,System.Boolean)">
+            <summary>
+            Parse the given svg elements
+            </summary>
+            <param name="xmlElements"></param>
+        </member>
+        <member name="M:MindFusion.Svg.TransformParser.GetTransform(MindFusion.Svg.SvgElement,System.Boolean,System.Boolean)">
+            <summary>
+            Retrieves a Matrix representing the transformation associated with the specified SvgElement.
+            </summary>
+        </member>
+        <member name="M:MindFusion.Svg.UnitFormatter.ReleaseDC(System.IntPtr,System.IntPtr)">
+            <summary>
+            ReleaseDC import.
+            </summary>
+        </member>
+        <member name="M:MindFusion.Svg.UnitFormatter.Align2Str(System.Drawing.StringAlignment)">
+            <summary>
+            Converts Flowchart.NET alignment constants into SVG "text-anchor" attribute
+            </summary>
+            <param name="sa">StringAlignment enumeration</param>
+            <returns>String corresponded value for "text-anchor" attribute</returns>
+        </member>
+        <member name="M:MindFusion.Svg.UnitFormatter.Image2String(System.Drawing.Image)">
+            <summary>
+            Transforms image into Base64 encoded string
+            </summary>
+            <param name="img">Inage object reference</param>
+            <returns>Base64 encoded Png image</returns>
+        </member>
+        <member name="M:MindFusion.Svg.UnitFormatter.IsNumericType(System.Type)">
+            <summary>
+            Check whether type passed is numeric one
+            </summary>
+            <param name="type">Type of the argument to be checked</param>
+            <returns>Returns true if type passed is numeric one false otherwise</returns>
+        </member>
+        <member name="M:MindFusion.Svg.UnitFormatter.#ctor(System.Single,System.String,System.Drawing.GraphicsUnit,System.Single)">
+            <summary>
+            UnitFormatter constructor
+            </summary>
+            <param name="scale">Scale factor for unit conversion ( default 1)</param>
+            <param name="separator">Decimal separator</param>
+        </member>
+        <member name="M:MindFusion.Svg.UnitFormatter.NextID">
+            <summary>
+            Returns next unique long utilized by 'handle'
+            </summary>
+            <returns>Unique long value</returns>
+        </member>
+        <member name="M:MindFusion.Svg.UnitFormatter.GetFormat(System.Type)">
+            <summary>
+            This method returns an object that implements ICustomFormatter to do the formatting
+            </summary>
+            <param name="argType">Type of the argument to be formatted</param>
+            <returns>Formatter object for the type passed</returns>
+        </member>
+        <member name="M:MindFusion.Svg.UnitFormatter.Format(System.String,System.Object,System.IFormatProvider)">
+            <summary>
+            This method does the custom formatting if it recognizes the 
+            format specification
+            </summary>
+            <param name="formatString">Format string</param>
+            <param name="argToBeFormatted">Argument to be formatted value</param>
+            <param name="provider">Format provider object reference</param>
+            <returns>Formatted string got from argument passed</returns>
+        </member>
+    </members>
+</doc>

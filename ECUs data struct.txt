@@ -1,0 +1,58 @@
+Painel:
+	-START LOG                     *1byte    ID - 0x64E
+	-STOP  LOG                     *1byte    ID - 0x64F
+
+Traseira: 
+	-Temperatura do óleo do motor  *2 Bytes  ID - 0x651
+	-velocidade 		       *2 Bytes  ID - 0x653
+	-rotação  		       *2 Bytes  ID - 0x654
+	-combustivel		       *2 Bytes  ID - 0x652
+	-Bateria		       *2 Bytes  ID - 0x650
+	-odômetro  		       *4 Bytes  ID - 0x655
+	-CAN 			       *14 Bytes TOTAL!!
+
+
+Dianteira:
+	-GPS  			       ~~Dar uma olhada em DMA/ no lenght RX	*4 Bytes  ID - 0x658
+	-telemetria		       ~~temporizada firmezinha			*non CAN
+	-Marcha			       ~~leitura contínua			*1 Bytes  ID - 0x657 /*JUNTOS*/
+	-freio			       ~~leitura contínua			*1 Bytes  ID - 0x657 /*JUNTOS*/
+	-acelerador		       ~~ADC DMA                                *2 Bytes  ID - 0x656
+	-CAN			       ~~descobrir total de Bytes
+	-Datalogger		       ~~I2C ~~descobrir total de Bytes 	*non CAN
+
+MAIN BUFFER:
+[0]  SYNC BYTE (0xAA)
+[1]  gear
+[2]  brake
+[3]  gasH
+[4]  gasL
+[5]  batH
+[6]  batL
+[7]  tempH
+[8]  tempL
+[9]  fuelH
+[10]  fuelL
+[11] velH
+[12] velL
+[13] rpmH
+[14] rpmL
+[15] odHH
+[16] odHL
+[17] odLH
+[18] odLL
+[19] GPSLatHH
+[20] GPSLatHL
+[21] GPSLatLH
+[22] GPSLatLL
+[23] GPSLonHH
+[24] GPSLonHL
+[25] GPSLonLH
+[26] GPSLonLL
+
+0x651
+0110  0101 0001
+
+0x658
+
+0110  0101 1000
