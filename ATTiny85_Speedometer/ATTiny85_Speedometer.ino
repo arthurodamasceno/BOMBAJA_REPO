@@ -9,11 +9,12 @@
 
 #define I2C_SLAVE_ADDRESS 0x04               // SPEED ADDRESS
 
+#define R 0.2921
 #define CF 1.0413412475268145371238154743309 // Correction factor, 
 // calibrate with reliable device
 
 uint8_t speed_buf[] = {0xAA, 0x00, 0x00, 0x00}; // Buffer to send via TWI
-uint8_t reg_position = 0x00;                    // Index of currente byte in buffer
+uint8_t reg_position = 0x00;                    // Index of current byte in buffer
 
 /*Control variables*/
 volatile boolean first = 0x0;
@@ -23,7 +24,7 @@ volatile uint32_t startTime = 0x00000000;
 volatile uint32_t finishTime = 0x00000000;
 uint32_t ZEROU = = 0x00000000;
 uint16_t speed_val = 0x00;
-uint8_t aux = 0x00;
+uint8_t pulses = 0x00;
 
 void initSetup() {
   DDRB  = B00000000;                   // All GPIOB as inputs
@@ -61,7 +62,7 @@ void prepareForInterrupts () {
 
 ISR(TIM1_OVF_vect) {
   overflowCount++;
-  ZEROU++;
+  setZEROU(overflowCount);
 }
 
 uint32_t getZEROU() {
@@ -72,13 +73,25 @@ void setZEROU(uint32_t z) {
   ZEROU = z;
 }
 
+uint8_t getPulses() {
+  return pulses;
+}
+
+void setPulses(uint8_t p) {
+  pulses = p;
+}
+
+void incPulses() {
+  pulses +=1;
+}
+
 ISR(PCINT0_vect) {
   
   if (PINB & (1 << PB1)) {                    // detect rising edge
   
     uint32_t overflowCopy = overflowCount;
-    setZEROU(0);
-    
+    setZEROU(0);                              // Reset counter for car stoped =)
+    incPulses();                              // increase pulses for odometer
     if (triggered) {
       return;                                  // prevents time values to change in middle of calc.
     }
@@ -102,27 +115,26 @@ uint16_t calcFreq(unsigned long ft, unsigned long st) {
   
   unsigned long elapsedTime = ft - st;             // Period calc.
   float freq = 1000000 * CF / float (elapsedTime); // Frequency calc.
-  float speed_f = freq * ;                 /* Speed calc.
-                                            * V = w*R
-                                            * w = 2*pi*f
-                                            * V
-                                                                    */
+  float speed_f = 2*PI*freq*R*3.6;                 /* Speed calc.
+                                                    * V = w*R
+                                                    * w = 2*pi*f
+                                                    * V = 2*pi*f*R(defined)
+                                                    */
   uint16_t speed_calc = (uint16_t) speed_f;
   
   prepareForInterrupts ();
   return speed_calc;
 }
 
-void requestEvent()
-{
+void requestEvent() {
 
   TinyWireS.send(speed_buf[reg_position]);
   reg_position++;
-
-  if (reg_position >= 3)
+  
+  if (reg_position >= 4)
   {
-    reg_position = 0;
-
+    setPulses(0);
+    reg_position = 0; 
   }
 }
 
@@ -132,15 +144,21 @@ int main(void) {
   prepareForInterrupts ();
 
   while (1) {
-
+        
     TinyWireS_stop_check();
 
     if (triggered) {
 
       speed_val = calcFreq(finishTime, startTime);
-      speed_buf = (speed_val >> 8);
-      speed_buf = (speed_val);
-
+      speed_buf[1] = (speed_val >> 8);
+      speed_buf[2] = (speed_val);
     }
+    if(getZEROU()>=8000){
+      speed_val = 0;
+      speed_buf[1] = (speed_val >> 8);
+      speed_buf[2] = (speed_val);
+    }
+
+    speep_buf[3] = getPulses();
   }
 }

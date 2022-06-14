@@ -12,8 +12,8 @@
 #define CF 1.0413412475268145371238154743309 //Correction factor, 
                                              //calibrate with reliable device
 
-uint8_t frequency[]={0xAA,0x00,0x00};
-byte reg_position;
+uint8_t RPM_buf[]={0x55,0x00,0x00};        // Buffer to send via TWI
+byte reg_position;                           // Index of current byte in buffer
 
 volatile boolean first;
 volatile boolean triggered;
@@ -21,46 +21,47 @@ volatile unsigned long overflowCount;
 volatile unsigned long startTime;
 volatile unsigned long finishTime;
 uint32_t ZEROU = 0;
-uint16_t frequencia = 0;
+uint16_t RPM = 0;
 
 uint8_t aux;
 
 void initSetup() {
 
-  DDRB  = B00000000; // All GPIO B as inputs
-  PORTB = B00000010;
-  TinyWireS.begin(I2C_SLAVE_ADDRESS);
-  TinyWireS.onRequest(requestEvent);
+  DDRB  = B00000000;                   // All GPIO B as inputs
+  PORTB = B00000010;                   // PORTB1 (fisical pin 6) internal pull up
+  TinyWireS.begin(I2C_SLAVE_ADDRESS);  // Start TWI with Speed Address
+  TinyWireS.onRequest(requestEvent);   // Set up request handler
 }
 
 
 
 void prepareForInterrupts () {
 
-  cli();
+  cli();                   //disable all interrupts
   first = true;
   triggered = false;
 
-  TCCR1 = 0;
-  TIFR |= (1 << TOV1);
-  TCNT1 = 0;
+  TCCR1 = 0;               // Reset Timer 1 control register
+  TIFR |= (1 << TOV1);     // Set Timer 1 Overflow flag
+  TCNT1 = 0;               // Timer 1 cointer reset
 
   overflowCount = 0;
 
-  TIMSK |= (1 << TOIE1);
+  TIMSK |= (1 << TOIE1);    // Enable overflow interrupt
+  /*  Set timer pre-scaler to 8 */
   TCCR1 &= ~(1 << CS10);
   TCCR1 &= ~(1 << CS11);
   TCCR1 |= (1 << CS12);
   TCCR1 &= ~(1 << CS13);
 
-  PCMSK |= (1 << PCINT1);
-  GIMSK |= (1 << PCIE);
-  sei();
+  PCMSK |= (1 << PCINT1);   // enable pin change interrupt
+  GIMSK |= (1 << PCIE);     // enable external interrupts
+  sei(); 
 }
 
 ISR(TIM1_OVF_vect) {
   overflowCount++;
-  ZEROU++;
+  setZEROU(overflowCount);
 }
 
 uint32_t getZEROU() {
@@ -98,14 +99,14 @@ ISR(PCINT0_vect) {
 uint16_t calcFreq(unsigned long ft, unsigned long st) {
   unsigned long elapsedTime = ft - st;
   float freq = 1000000 * CF / float (elapsedTime);
-  uint16_t freqO = (uint16_t)freq;
+  uint16_t RPMO = (uint16_t)freq * 60;  // RPM = frequency * 60 :)
   prepareForInterrupts ();
-  return freqO;
+  return RPMO;
 }
 
 void requestEvent()
 {
-    TinyWireS.send(frequency[reg_position]);
+    TinyWireS.send(RPM_buf[reg_position]);
     reg_position++;
     if (reg_position >= 3)
     {
@@ -119,9 +120,14 @@ int main(void) {
   while (1) {
     TinyWireS_stop_check();
     if (triggered) {
-      frequencia = calcFreq(finishTime, startTime);
-      frequency[1] = (frequencia>>8);
-      frequency[2] = (frequencia);
+      RPM = calcFreq(finishTime, startTime);
+      RPM_buf[1] = (RPM>>8);
+      RPM_buf[2] = (RPM);
+    }
+    if (getZEROU()>=8000) {
+      RPM = 0;
+      RPM_buf[1] = (RPM>>8);
+      RPM_buf[2] = (RPM);
     }
   }
 }
