@@ -1,8 +1,0 @@
-FlASH_PAGE_F1.c:26:17:GetPage	24	static
-FlASH_PAGE_F1.c:39:6:float2Bytes	24	static
-FlASH_PAGE_F1.c:53:10:Bytes2float	32	static
-FlASH_PAGE_F1.c:67:10:Flash_Write_Data	56	static
-FlASH_PAGE_F1.c:113:6:Flash_Read_Data	24	static
-FlASH_PAGE_F1.c:124:6:Convert_To_Str	32	static
-FlASH_PAGE_F1.c:133:6:Flash_Write_NUM	16	static
-FlASH_PAGE_F1.c:140:10:Flash_Read_NUM	24	static
