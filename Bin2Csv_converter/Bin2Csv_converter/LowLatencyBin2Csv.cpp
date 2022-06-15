@@ -26,13 +26,13 @@ int main(int argc, char* argv[]) {
 	_itoa_s(i, buffer, 10);
 
 	std::string x, w, k, y, f,g,o,e,z;
-	x = "E:\\LOG";
-	y = "E:\\LOG0";
+	x = "D:\\data";
+	y = "D:\\data0";
 	w = ".bin";
 	f = ".csv";
 
-	o = "E:\\teste";
-	z = "E:\\teste0";
+	o = "D:\\teste";
+	z = "D:\\teste0";
 	e =	" - connection 0 - UART COM10.csv";
 
 	if (i < 9) {

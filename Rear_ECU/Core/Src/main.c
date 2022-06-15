@@ -65,6 +65,9 @@ uint8_t PULSO = 0;
 uint8_t p_rpm = 0;
 uint8_t p_spd = 0;
 uint16_t batval_old = 0;
+uint8_t odbuff[1];
+
+float fuel_f=0.0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -325,7 +328,7 @@ static void MX_GPIO_Init(void) {
 
 	/*Configure GPIO pin Output Level */
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_RESET);
-
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET);
 	/*Configure GPIO pin : PC13 */
 	GPIO_InitStruct.Pin = GPIO_PIN_13;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -365,6 +368,12 @@ static void MX_GPIO_Init(void) {
 
 	/*Configure GPIO pin : PB3 */
 	GPIO_InitStruct.Pin = GPIO_PIN_3;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+	GPIO_InitStruct.Pin = GPIO_PIN_6;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -478,8 +487,11 @@ void Fuel_taskF(void *pvParameters) {
 
 	while (1) {
 		uint8_t fuelbuff[2];
-		fuelbuff[0] = (uint8_t) (analog[1] >> 8) & 0xFF;
-		fuelbuff[1] = (uint8_t) analog[1] & 0xFF;
+		uint16_t fuel_a = analog[1];
+		fuel_f = 0.9802*fuel_f + (1-0.9802)*(float)fuel_a;
+		uint16_t fuel_c = (uint16_t)fuel_f;
+		fuelbuff[0] = (uint8_t) (fuel_c >> 8) & 0xFF;
+		fuelbuff[1] = (uint8_t) fuel_c & 0xFF;
 
 		uint32_t TxMailbox;
 
@@ -506,6 +518,7 @@ void Speed_taskF(void *pvParameters) {
 	xLastWakeTime = xTaskGetTickCount();
 	while (1) {
 		uint8_t speedbuff[2];
+
 //		speedbuff[0] = 0;
 //		speedbuff[1] = p_spd*5;
 //		p_spd = 0;
@@ -517,7 +530,7 @@ void Speed_taskF(void *pvParameters) {
 		}
 		HAL_I2C_Master_Receive(&hi2c2, (0x4 << 1), &speedbuff[0], 1, 100);
 		HAL_I2C_Master_Receive(&hi2c2, (0x4 << 1), &speedbuff[1], 1, 100);
-
+		HAL_I2C_Master_Receive(&hi2c2, (0x4 << 1), &odbuff[0], 1, 100);
 		uint32_t TxMailbox;
 
 		CAN_TxHeaderTypeDef SpeedHeader;
@@ -557,7 +570,7 @@ void RPM_taskF(void *pvParameters) {
 		uint8_t test[1];
 		uint8_t dump[1];
 		HAL_I2C_Master_Receive(&hi2c2, (0x5 << 1), &test[0], 1, 10);
-		if (test[0] != 0xAA) {
+		if (test[0] != 0x55){
 			HAL_I2C_Master_Receive(&hi2c2, (0x5 << 1), &dump[0], 1, 10);
 		}
 
@@ -635,35 +648,26 @@ void Temp_taskF(void *pvParameters) {
 
 /*Odometer read write task */
 void OD_taskF(void *pvParameters) {
-	while (1) {
-		if ( xSemaphoreTake( xSemaphore, LONG_TIME ) == pdTRUE) {
-			PULSO += 1;
+	TickType_t xLastWakeTime;
+		const TickType_t xFrequency = 100;  //Ticks to wait since routine starts
+		xLastWakeTime = xTaskGetTickCount();
+		while (1) {
 
-			if (PULSO == 720) { //ODOMETRO 100m A CADA 58 VOLTAS!!!
+			uint32_t TxMailbox;
+			CAN_TxHeaderTypeDef odHeader;
 
-				PULSO = 0;
-				uint8_t odbuff[1];
-				odbuff[0] = 0x44; //flag
+			odHeader.DLC = 1;
+			odHeader.StdId = 0x666;
+			odHeader.IDE = CAN_ID_STD;
+			odHeader.RTR = CAN_RTR_DATA;
 
-				uint32_t TxMailbox;
-
-				CAN_TxHeaderTypeDef odHeader;
-
-				odHeader.DLC = 1;
-				odHeader.StdId = 0x666;
-				odHeader.IDE = CAN_ID_STD;
-				odHeader.RTR = CAN_RTR_DATA;
-
-				if (HAL_CAN_AddTxMessage(&hcan, &odHeader, odbuff, &TxMailbox)
-						!= HAL_OK) {
-
-					Error_Handler();
-				}
+			if (HAL_CAN_AddTxMessage(&hcan, &odHeader, odbuff, &TxMailbox)
+					!= HAL_OK) {
+				Error_Handler();
 			}
+			HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_6);
+			vTaskDelayUntil(&xLastWakeTime, xFrequency); /*10Hz frequency*/
 		}
-
-		//TASK N TEM DELAY POIS ELA SÓ RODA COM SINCRONIZAÇÃO DO SEMÁFORO
-	}
 }
 
 /**

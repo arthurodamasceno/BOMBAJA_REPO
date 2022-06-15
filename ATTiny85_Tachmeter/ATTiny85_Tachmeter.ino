@@ -9,6 +9,7 @@
 
 #define I2C_SLAVE_ADDRESS 0x05 // TACH ADDRESS
 
+#define RPM_COEF 60.0
 #define CF 1.0413412475268145371238154743309 //Correction factor, 
                                              //calibrate with reliable device
 
@@ -33,10 +34,7 @@ void initSetup() {
   TinyWireS.onRequest(requestEvent);   // Set up request handler
 }
 
-
-
 void prepareForInterrupts () {
-
   cli();                   //disable all interrupts
   first = true;
   triggered = false;
@@ -99,7 +97,7 @@ ISR(PCINT0_vect) {
 uint16_t calcFreq(unsigned long ft, unsigned long st) {
   unsigned long elapsedTime = ft - st;
   float freq = 1000000 * CF / float (elapsedTime);
-  uint16_t RPMO = (uint16_t)freq * 60;  // RPM = frequency * 60 :)
+  uint16_t RPMO = (uint16_t)freq * RPM_COEF;  // RPM = frequency * 60 :)
   prepareForInterrupts ();
   return RPMO;
 }

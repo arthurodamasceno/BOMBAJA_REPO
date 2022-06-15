@@ -202,7 +202,7 @@ int main(void) {
 		bsl[21] = 0x00;
 		HAL_I2C_Master_Transmit(&hi2c1, (0x08 << 1), bsl, 26, 10);
 		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-		DATAFLAG=1;
+		//DATAFLAG=1;
 		//}
 	}
 }

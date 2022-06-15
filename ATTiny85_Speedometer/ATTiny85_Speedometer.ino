@@ -9,6 +9,7 @@
 
 #define I2C_SLAVE_ADDRESS 0x04               // SPEED ADDRESS
 
+#define SPEED_COEF 1.8849555921538759430775860299677
 #define R 0.2921
 #define CF 1.0413412475268145371238154743309 // Correction factor, 
 // calibrate with reliable device
@@ -22,7 +23,7 @@ volatile boolean triggered = 0x0;
 volatile uint32_t overflowCount = 0x00000000;
 volatile uint32_t startTime = 0x00000000;
 volatile uint32_t finishTime = 0x00000000;
-uint32_t ZEROU = = 0x00000000;
+uint32_t ZEROU = 0x00000000;
 uint16_t speed_val = 0x00;
 uint8_t pulses = 0x00;
 
@@ -115,10 +116,10 @@ uint16_t calcFreq(unsigned long ft, unsigned long st) {
   
   unsigned long elapsedTime = ft - st;             // Period calc.
   float freq = 1000000 * CF / float (elapsedTime); // Frequency calc.
-  float speed_f = 2*PI*freq*R*3.6;                 /* Speed calc.
+  float speed_f = R*SPEED_COEF*freq;/* Speed calc.
                                                     * V = w*R
                                                     * w = 2*pi*f
-                                                    * V = 2*pi*f*R(defined)
+                                                    * V = 2*pi*f*R*kph/PULSES(defined)
                                                     */
   uint16_t speed_calc = (uint16_t) speed_f;
   
@@ -159,6 +160,6 @@ int main(void) {
       speed_buf[2] = (speed_val);
     }
 
-    speep_buf[3] = getPulses();
+    speed_buf[3] = getPulses();
   }
 }

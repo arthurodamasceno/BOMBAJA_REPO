@@ -3,16 +3,19 @@
 #include <EEPROM.h>
 
 #define FUEL_LED 9
+#define DIST_PULSO 0.1529432025 //CALIBRAR DISTANCIA DE PULSO
 
 uint8_t gear, brake;
 uint16_t temp, vel, rpm, fuel, bat, gas;
 uint32_t odometer;
-int32_t lat,lon;
+int32_t lat, lon;
 
-uint8_t fator=0;
+uint8_t fator = 0;
 bool FLAG = false;
 bool INIT = false;
 bool od = false;
+uint8_t odometer_b = 0;
+float odometer_f = 0;
 
 struct can_frame INIT_LOG;
 struct can_frame STOP_LOG;
@@ -102,9 +105,9 @@ ISR(PCINT1_vect) {
 }
 
 void setup() {
-  
- // EEPROMWritelong(0, 0);
-  
+
+  // EEPROMWritelong(0, 0);
+
   INIT_LOG.can_id  = 0x64E;
   INIT_LOG.can_dlc = 1;
   INIT_LOG.data[0] = 0x55;
@@ -131,7 +134,7 @@ void setup() {
   pinMode(latchPin, OUTPUT);
   pinMode(shiftPin, OUTPUT);
   pinMode(dataPin, OUTPUT);
-  pinMode(FUEL_LED,OUTPUT);
+  pinMode(FUEL_LED, OUTPUT);
 
   mcp2515.reset();
   mcp2515.setBitrate(CAN_250KBPS, MCP_8MHZ);
@@ -143,30 +146,30 @@ void loop() {
 
     if (canMsg.can_id == 0x651) {
       temp = (canMsg.data[0] << 8) | (canMsg.data[1] & 0xff);
-      temp = temp/4;
+      temp = temp / 4;
     }
     if (canMsg.can_id == 0x653) {
       vel = (canMsg.data[0] << 8) | (canMsg.data[1] & 0xff);
-      vel = (float)vel*0.55059552846;
+      //vel = (float)vel*0.55059552846;
     }
     if (canMsg.can_id == 0x654) {
       rpm = (canMsg.data[0] << 8) | (canMsg.data[1] & 0xff);
-      rpm=rpm*60;
+      //rpm=rpm*60;
     }
     if (canMsg.can_id == 0x652) {
       fuel = (canMsg.data[0] << 8) | (canMsg.data[1] & 0xff);
-      fuel = float(fuel)*(0.02442002442);
+      //fuel = float(fuel)*(0.02442002442);
     }
     if (canMsg.can_id == 0x650) {
       bat = (canMsg.data[0] << 8) | (canMsg.data[1] & 0xff);
-      bat = (float)bat*(0.03669190448);
+      //bat = (float)bat*(0.03669190448);
     }
     // if (canMsg.can_id == 0x655) {
     //   odometer = (canMsg.data[0] << 24) | (canMsg.data[1] << 16) | (canMsg.data[2] << 8) | (canMsg.data[3] & 0xff);
     //}
     if (canMsg.can_id == 0x664) {
       lat = (canMsg.data[0] << 24) | (canMsg.data[1] << 16) | (canMsg.data[2] << 8) | (canMsg.data[3] & 0xff);
-      
+
     }
     if (canMsg.can_id == 0x665) {
       lon = (canMsg.data[0] << 24) | (canMsg.data[1] << 16) | (canMsg.data[2] << 8) | (canMsg.data[3] & 0xff);
@@ -179,31 +182,30 @@ void loop() {
       gas = (canMsg.data[0] << 8) | (canMsg.data[1] & 0xff);
     }
     if (canMsg.can_id == 0x666) {
-      if (canMsg.data[0] == 0x44) {
-        od = true;
-      }
+      odometer_b = canMsg.data[0];
+      od = true;
     }
   }
 
   if (millis() - anterior > 100) {
     anterior = millis();
-  //  TFT_val("gear", gear);
-  //  TFT_val("break", brake );
-  //  TFT_val("gas", gas );
-  //  TFT_val("bat", bat);
-      TFT_val("bat",bat);
+    //  TFT_val("gear", gear);
+    //  TFT_val("break", brake );
+    //  TFT_val("gas", gas );
+    //  TFT_val("bat", bat);
+    TFT_val("bat", bat);
     TFT_val("temp", temp);
     TFT_val("fuel", fuel);
     TFT_val("vel", vel);
     TFT_val("rpm", rpm);
     TFT_val("odometer", odometer);
-  //  TFT_val("lat", lat);
-  //  TFT_val("lon", lon);
+    //  TFT_val("lat", lat);
+    //  TFT_val("lon", lon);
   }
 
   ligaLeds(map(rpm, 0, 4500, 0, 16));
-  if(fuel<=15)digitalWrite(FUEL_LED,HIGH);
-  if(fuel>15)digitalWrite(FUEL_LED,LOW);
+  if (fuel <= 15)digitalWrite(FUEL_LED, HIGH);
+  if (fuel > 15)digitalWrite(FUEL_LED, LOW);
 
   if (FLAG && !INIT) {
     mcp2515.sendMessage(&INIT_LOG);
@@ -218,17 +220,34 @@ void loop() {
 
   if (od) {
     od = false;
-    fator ++;
-    if(fator==10){
+    odometer_f += ((float)odometer_b * DIST_PULSO);  //CALIBRAR DISTANCIA DE UM PULSO
+
+    if (odometer_f >= 100) {
+      
+
+      odometer_f=0;
       odometer = EEPROMReadlong(0);
-      fator=0;
-      odometer += 1;
+      odometer += 100;
       EEPROMWritelong(0, odometer);
+      OD_LOG.data[0] = (uint8_t) (odometer >> 24) & 0xFF;
+      OD_LOG.data[1] = (uint8_t) (odometer >> 16) & 0xFF;
+      OD_LOG.data[2] = (uint8_t) (odometer >> 8) & 0xFF;
+      OD_LOG.data[3] = (uint8_t) odometer & 0xFF;
+      mcp2515.sendMessage(&OD_LOG);
     }
-    OD_LOG.data[0] = (uint8_t) (odometer >> 24) & 0xFF;
-    OD_LOG.data[1] = (uint8_t) (odometer >> 16) & 0xFF;
-    OD_LOG.data[2] = (uint8_t) (odometer >> 8) & 0xFF;
-    OD_LOG.data[3] = (uint8_t) odometer & 0xFF;
-    mcp2515.sendMessage(&OD_LOG);
+  }
+}
+
+void serialEvent() {
+  while (Serial.available()) {
+    // get the new byte:
+    char inChar = (char)Serial.read();
+    // add it to the inputString:
+    
+    // if the incoming character is a newline, set a flag so the main loop can
+    // do something about it:
+    if (inChar == 'C') {
+      FLAG = true;
+    }
   }
 }
