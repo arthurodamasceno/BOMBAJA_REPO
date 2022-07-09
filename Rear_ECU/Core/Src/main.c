@@ -66,8 +66,9 @@ uint8_t p_rpm = 0;
 uint8_t p_spd = 0;
 uint16_t batval_old = 0;
 uint8_t odbuff[1];
+uint8_t rpmbuff[2];
 
-float fuel_f=0.0;
+float fuel_f=0.0,fuel_f1=0.0,fuel_f2=0.0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -402,6 +403,7 @@ static void MX_GPIO_Init(void) {
 //	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_8);
 //	p_rpm += 1;
 //}
+
 /*Configure can filters */
 void CAN_Filter_Config(void) {
 	CAN_FilterTypeDef can_filt;
@@ -448,20 +450,17 @@ void Bat_taskF(void *pvParameters) {
 	const TickType_t xFrequency = 1000;  //Ticks to wait since routine starts
 	xLastWakeTime = xTaskGetTickCount();
 	while (1) {
-		//buffer[0] = (uint8_t) (analog[0] >> 8) & 0xFF;  //bat CALIBRAR
-		//buffer[1] = (uint8_t) analog[0] & 0xFF;
-
 		uint8_t batbuff[2];
-		uint16_t batval = analog[0];
-		/*if (batval < 2100) {
-			batval = batval_old;
-		} else {
-			batval_old = batval;
-		}*/
-		batbuff[0] = (uint8_t) (batval >> 8) & 0xFF;
-		batbuff[1] = (uint8_t) batval & 0xFF;
-		uint32_t TxMailbox;
+		uint16_t batAD = analog[0];
+		float bat_a = 0.0004502626;
+		float bat_b = 2.4948762146;
+		float bat_v =  30*(((float)batAD * bat_a) + bat_b);
+		uint16_t batCAN = (uint16_t) bat_v;
 
+		batbuff[0] = (uint8_t) (batCAN >> 8) & 0xFF;
+		batbuff[1] = (uint8_t) batCAN & 0xFF;
+
+		uint32_t TxMailbox;
 		CAN_TxHeaderTypeDef BatHeader;
 
 		BatHeader.DLC = 2;
@@ -471,7 +470,6 @@ void Bat_taskF(void *pvParameters) {
 
 		if (HAL_CAN_AddTxMessage(&hcan, &BatHeader, batbuff, &TxMailbox)
 				!= HAL_OK) {
-
 			Error_Handler();
 		}
 		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
@@ -487,11 +485,26 @@ void Fuel_taskF(void *pvParameters) {
 
 	while (1) {
 		uint8_t fuelbuff[2];
+		uint8_t fuelbuff1[2];
+		uint8_t fuelbuff2[2];
+
 		uint16_t fuel_a = analog[1];
-		fuel_f = 0.9802*fuel_f + (1-0.9802)*(float)fuel_a;
+		fuel_f =  0.998744152176286*fuel_f  + (1-0.998744152176286) * (float)fuel_a;
+		fuel_f1 = 0.999874344189209*fuel_f1 + (1-0.999874344189209) * (float)fuel_a;
+		fuel_f2 = 0.999987433708342*fuel_f2 + (1-0.999987433708342) * (float)fuel_a;
+
 		uint16_t fuel_c = (uint16_t)fuel_f;
+		uint16_t fuel_c1 = (uint16_t)fuel_f1;
+		uint16_t fuel_c2 = (uint16_t)fuel_f2;
+
 		fuelbuff[0] = (uint8_t) (fuel_c >> 8) & 0xFF;
 		fuelbuff[1] = (uint8_t) fuel_c & 0xFF;
+
+		fuelbuff1[0] = (uint8_t) (fuel_c1 >> 8) & 0xFF;
+		fuelbuff1[1] = (uint8_t) fuel_c1 & 0xFF;
+
+		fuelbuff2[0] = (uint8_t) (fuel_c2 >> 8) & 0xFF;
+		fuelbuff2[1] = (uint8_t) fuel_c2 & 0xFF;
 
 		uint32_t TxMailbox;
 
@@ -507,6 +520,33 @@ void Fuel_taskF(void *pvParameters) {
 			Error_Handler();
 		}
 
+		uint32_t TxMailbox1;
+
+		CAN_TxHeaderTypeDef FuelHeader1;
+
+		FuelHeader.DLC = 2;
+		FuelHeader.StdId = 0x668;
+		FuelHeader.IDE = CAN_ID_STD;
+		FuelHeader.RTR = CAN_RTR_DATA;
+
+		if (HAL_CAN_AddTxMessage(&hcan, &FuelHeader1, fuelbuff1, &TxMailbox1)
+				!= HAL_OK) {
+			Error_Handler();
+		}
+
+		uint32_t TxMailbox2;
+
+		CAN_TxHeaderTypeDef FuelHeader2;
+
+		FuelHeader.DLC = 2;
+		FuelHeader.StdId = 0x669;
+		FuelHeader.IDE = CAN_ID_STD;
+		FuelHeader.RTR = CAN_RTR_DATA;
+
+		if (HAL_CAN_AddTxMessage(&hcan, &FuelHeader2, fuelbuff2, &TxMailbox2)
+				!= HAL_OK) {
+			Error_Handler();
+		}
 		vTaskDelayUntil(&xLastWakeTime, xFrequency); /*50Hz frequency*/
 	}
 }
@@ -518,10 +558,6 @@ void Speed_taskF(void *pvParameters) {
 	xLastWakeTime = xTaskGetTickCount();
 	while (1) {
 		uint8_t speedbuff[2];
-
-//		speedbuff[0] = 0;
-//		speedbuff[1] = p_spd*5;
-//		p_spd = 0;
 		uint8_t test[1];
 		uint8_t dump[1];
 		HAL_I2C_Master_Receive(&hi2c2, (0x4 << 1), &test[0], 1, 100);
@@ -530,6 +566,8 @@ void Speed_taskF(void *pvParameters) {
 		}
 		HAL_I2C_Master_Receive(&hi2c2, (0x4 << 1), &speedbuff[0], 1, 100);
 		HAL_I2C_Master_Receive(&hi2c2, (0x4 << 1), &speedbuff[1], 1, 100);
+		//HAL_I2C_Master_Receive(&hi2c2, (0x4 << 1), &rpmbuff[0], 1, 100);
+		//HAL_I2C_Master_Receive(&hi2c2, (0x4 << 1), &rpmbuff[1], 1, 100);
 		HAL_I2C_Master_Receive(&hi2c2, (0x4 << 1), &odbuff[0], 1, 100);
 		uint32_t TxMailbox;
 
@@ -556,17 +594,6 @@ void RPM_taskF(void *pvParameters) {
 	xLastWakeTime = xTaskGetTickCount();
 	while (1) {
 
-		//buffer[6] = (uint8_t) (analog[3] >> 8) & 0xFF;  //rpm CALIBRAR
-		//buffer[7] = (uint8_t) analog[3] & 0xFF;
-
-		uint8_t rpmbuff[2];
-//		rpmbuff[0] = 0;
-//		rpmbuff[1] = p_rpm*5;
-//		p_rpm=0;
-		//HAL_I2C_Master_Receive(&hi2c1, (0x5 << 1), &rpmbuff[1], 1, 10);
-		//rpmbuff[0] = (uint8_t) (analog[3] >> 8) & 0xFF;
-		//rpmbuff[1] = (uint8_t) analog[3] & 0xFF;
-
 		uint8_t test[1];
 		uint8_t dump[1];
 		HAL_I2C_Master_Receive(&hi2c2, (0x5 << 1), &test[0], 1, 10);
@@ -577,8 +604,6 @@ void RPM_taskF(void *pvParameters) {
 		HAL_I2C_Master_Receive(&hi2c2, (0x5 << 1), &rpmbuff[0], 1, 10);
 		HAL_I2C_Master_Receive(&hi2c2, (0x5 << 1), &rpmbuff[1], 1, 10);
 		uint32_t TxMailbox;
-//		rpmbuff[0]=0;
-//		rpmbuff[1]=123;
 
 
 		CAN_TxHeaderTypeDef RPMHeader;

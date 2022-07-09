@@ -469,10 +469,10 @@ void GPS_taskF(void *pvParameters) {
 	xLastWakeTime = xTaskGetTickCount();
 	while (1) {
 		uint8_t LAT[4];
-		LAT[0] = buffer[18] = posllh.lat >> 24;
+		/*LAT[0] = buffer[18] = posllh.lat >> 24;
 		LAT[1] = buffer[19] = posllh.lat >> 16;
 		LAT[2] = buffer[20] = posllh.lat >> 8;
-		LAT[3] = buffer[21] = posllh.lat;
+		LAT[3] = buffer[21] = posllh.lat;*/
 
 		uint32_t TxMailbox;
 
@@ -488,10 +488,10 @@ void GPS_taskF(void *pvParameters) {
 			Error_Handler();
 		}
 		uint8_t LON[4];
-		LON[0] = buffer[22] = posllh.lon >> 24;
+		/*LON[0] = buffer[22] = posllh.lon >> 24;
 		LON[1] = buffer[23] = posllh.lon >> 16;
 		LON[2] = buffer[24] = posllh.lon >> 8;
-		LON[3] = buffer[25] = posllh.lon;
+		LON[3] = buffer[25] = posllh.lon;*/
 
 		CAN_TxHeaderTypeDef LONHeader;
 
@@ -662,6 +662,18 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 		buffer[15] = rcv_msg[1];
 		buffer[16] = rcv_msg[2];
 		buffer[17] = rcv_msg[3];
+	}
+	if (RxHeader.StdId == 0x668) {
+		buffer[18] = 0;//rcv_msg[0];
+		buffer[19] = 0;//rcv_msg[1];
+		buffer[20] = rcv_msg[0];
+		buffer[21] = rcv_msg[1];
+	}
+	if (RxHeader.StdId == 0x669) {
+		buffer[22] = 0;//rcv_msg[0];
+		buffer[23] = 0;//rcv_msg[1];
+		buffer[24] = rcv_msg[0];
+		buffer[25] = rcv_msg[1];
 	}
 
 }
