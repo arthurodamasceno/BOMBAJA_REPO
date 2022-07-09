@@ -494,17 +494,21 @@ void Fuel_taskF(void *pvParameters) {
 		fuel_f2 = 0.999987433708342*fuel_f2 + (1-0.999987433708342) * (float)fuel_a;
 
 		uint16_t fuel_c = (uint16_t)fuel_f;
-		uint16_t fuel_c1 = (uint16_t)fuel_f1;
-		uint16_t fuel_c2 = (uint16_t)fuel_f2;
+		uint32_t fuel_c1 = (uint16_t)fuel_f1;
+		uint32_t fuel_c2 = (uint16_t)fuel_f2;
 
 		fuelbuff[0] = (uint8_t) (fuel_c >> 8) & 0xFF;
 		fuelbuff[1] = (uint8_t) fuel_c & 0xFF;
 
-		fuelbuff1[0] = (uint8_t) (fuel_c1 >> 8) & 0xFF;
-		fuelbuff1[1] = (uint8_t) fuel_c1 & 0xFF;
+		fuelbuff1[0] = (uint8_t) (fuel_c1 >> 24);
+		fuelbuff1[1] = (uint8_t) (fuel_c1 >> 16);
+		fuelbuff1[2] = (uint8_t) (fuel_c1 >> 8);
+		fuelbuff1[3] = (uint8_t) fuel_c1 & 0xFF;
 
-		fuelbuff2[0] = (uint8_t) (fuel_c2 >> 8) & 0xFF;
-		fuelbuff2[1] = (uint8_t) fuel_c2 & 0xFF;
+		fuelbuff2[0] = (uint8_t) (fuel_c2 >> 24);
+	    fuelbuff2[1] = (uint8_t) (fuel_c2 >> 16);
+		fuelbuff2[2] = (uint8_t) (fuel_c2 >> 8);
+		fuelbuff2[3] = (uint8_t) fuel_c2 & 0xFF;
 
 		uint32_t TxMailbox;
 

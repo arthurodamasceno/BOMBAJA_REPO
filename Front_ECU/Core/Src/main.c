@@ -664,16 +664,16 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 		buffer[17] = rcv_msg[3];
 	}
 	if (RxHeader.StdId == 0x668) {
-		buffer[18] = 0;//rcv_msg[0];
-		buffer[19] = 0;//rcv_msg[1];
-		buffer[20] = rcv_msg[0];
-		buffer[21] = rcv_msg[1];
+		buffer[18] = rcv_msg[0];
+		buffer[19] = rcv_msg[1];
+		buffer[20] = rcv_msg[2];
+		buffer[21] = rcv_msg[3];
 	}
 	if (RxHeader.StdId == 0x669) {
-		buffer[22] = 0;//rcv_msg[0];
-		buffer[23] = 0;//rcv_msg[1];
-		buffer[24] = rcv_msg[0];
-		buffer[25] = rcv_msg[1];
+		buffer[22] = rcv_msg[0];
+		buffer[23] = rcv_msg[1];
+		buffer[24] = rcv_msg[2];
+		buffer[25] = rcv_msg[3];
 	}
 
 }

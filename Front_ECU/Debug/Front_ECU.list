@@ -1969,20 +1969,20 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
  8000cac:	697b      	ldr	r3, [r7, #20]
  8000cae:	f5b3 6fcd 	cmp.w	r3, #1640	; 0x668
  8000cb2:	d10b      	bne.n	8000ccc <HAL_CAN_RxFifo0MsgPendingCallback+0xf0>
-		buffer[18] = 0;//rcv_msg[0];
- 8000cb4:	4b12      	ldr	r3, [pc, #72]	; (8000d00 <HAL_CAN_RxFifo0MsgPendingCallback+0x124>)
- 8000cb6:	2200      	movs	r2, #0
+		buffer[18] = rcv_msg[0];
+ 8000cb4:	7b3a      	ldrb	r2, [r7, #12]
+ 8000cb6:	4b12      	ldr	r3, [pc, #72]	; (8000d00 <HAL_CAN_RxFifo0MsgPendingCallback+0x124>)
  8000cb8:	749a      	strb	r2, [r3, #18]
-		buffer[19] = 0;//rcv_msg[1];
- 8000cba:	4b11      	ldr	r3, [pc, #68]	; (8000d00 <HAL_CAN_RxFifo0MsgPendingCallback+0x124>)
- 8000cbc:	2200      	movs	r2, #0
+		buffer[19] = rcv_msg[1];
+ 8000cba:	7b7a      	ldrb	r2, [r7, #13]
+ 8000cbc:	4b10      	ldr	r3, [pc, #64]	; (8000d00 <HAL_CAN_RxFifo0MsgPendingCallback+0x124>)
  8000cbe:	74da      	strb	r2, [r3, #19]
-		buffer[20] = rcv_msg[0];
- 8000cc0:	7b3a      	ldrb	r2, [r7, #12]
+		buffer[20] = rcv_msg[2];
+ 8000cc0:	7bba      	ldrb	r2, [r7, #14]
  8000cc2:	4b0f      	ldr	r3, [pc, #60]	; (8000d00 <HAL_CAN_RxFifo0MsgPendingCallback+0x124>)
  8000cc4:	751a      	strb	r2, [r3, #20]
-		buffer[21] = rcv_msg[1];
- 8000cc6:	7b7a      	ldrb	r2, [r7, #13]
+		buffer[21] = rcv_msg[3];
+ 8000cc6:	7bfa      	ldrb	r2, [r7, #15]
  8000cc8:	4b0d      	ldr	r3, [pc, #52]	; (8000d00 <HAL_CAN_RxFifo0MsgPendingCallback+0x124>)
  8000cca:	755a      	strb	r2, [r3, #21]
 	}
@@ -1991,20 +1991,20 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
  8000cce:	f240 6269 	movw	r2, #1641	; 0x669
  8000cd2:	4293      	cmp	r3, r2
  8000cd4:	d10b      	bne.n	8000cee <HAL_CAN_RxFifo0MsgPendingCallback+0x112>
-		buffer[22] = 0;//rcv_msg[0];
- 8000cd6:	4b0a      	ldr	r3, [pc, #40]	; (8000d00 <HAL_CAN_RxFifo0MsgPendingCallback+0x124>)
- 8000cd8:	2200      	movs	r2, #0
+		buffer[22] = rcv_msg[0];
+ 8000cd6:	7b3a      	ldrb	r2, [r7, #12]
+ 8000cd8:	4b09      	ldr	r3, [pc, #36]	; (8000d00 <HAL_CAN_RxFifo0MsgPendingCallback+0x124>)
  8000cda:	759a      	strb	r2, [r3, #22]
-		buffer[23] = 0;//rcv_msg[1];
- 8000cdc:	4b08      	ldr	r3, [pc, #32]	; (8000d00 <HAL_CAN_RxFifo0MsgPendingCallback+0x124>)
- 8000cde:	2200      	movs	r2, #0
+		buffer[23] = rcv_msg[1];
+ 8000cdc:	7b7a      	ldrb	r2, [r7, #13]
+ 8000cde:	4b08      	ldr	r3, [pc, #32]	; (8000d00 <HAL_CAN_RxFifo0MsgPendingCallback+0x124>)
  8000ce0:	75da      	strb	r2, [r3, #23]
-		buffer[24] = rcv_msg[0];
- 8000ce2:	7b3a      	ldrb	r2, [r7, #12]
+		buffer[24] = rcv_msg[2];
+ 8000ce2:	7bba      	ldrb	r2, [r7, #14]
  8000ce4:	4b06      	ldr	r3, [pc, #24]	; (8000d00 <HAL_CAN_RxFifo0MsgPendingCallback+0x124>)
  8000ce6:	761a      	strb	r2, [r3, #24]
-		buffer[25] = rcv_msg[1];
- 8000ce8:	7b7a      	ldrb	r2, [r7, #13]
+		buffer[25] = rcv_msg[3];
+ 8000ce8:	7bfa      	ldrb	r2, [r7, #15]
  8000cea:	4b05      	ldr	r3, [pc, #20]	; (8000d00 <HAL_CAN_RxFifo0MsgPendingCallback+0x124>)
  8000cec:	765a      	strb	r2, [r3, #25]
 	}
