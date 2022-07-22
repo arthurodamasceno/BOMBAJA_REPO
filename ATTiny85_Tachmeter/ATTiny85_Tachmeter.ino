@@ -74,6 +74,7 @@ ISR(PCINT0_vect) {
   if (PINB & (1 << PB1)) { // detect rising edge
     unsigned long overflowCopy = overflowCount;
     setZEROU(0);
+    
     if (triggered) {
 
       return;
@@ -81,11 +82,11 @@ ISR(PCINT0_vect) {
 
     if (first)
     {
-      startTime = (overflowCopy << 8) | TCNT1;
+      startTime = (overflowCopy << 8);
       first = false;
       return;
     }
-    finishTime = (overflowCopy << 8) | TCNT1;
+    finishTime = (overflowCopy << 8);
     triggered = true;
 
     TIMSK = 0;

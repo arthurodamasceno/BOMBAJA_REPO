@@ -99,11 +99,11 @@ ISR(PCINT0_vect) {
 
     if (first)
     {
-      startTime = (overflowCopy << 8) | TCNT1; // Save first pulse timer value
+      startTime = (overflowCopy << 8); // Save first pulse timer value
       first = false;                           // Set first pulse flag
       return;
     }
-    finishTime = (overflowCopy << 8) | TCNT1;  // Save second pulse timer value
+    finishTime = (overflowCopy << 8);  // Save second pulse timer value
     triggered = true;                          // Set trig pulse flag
 
     TIMSK = 0;                                 // Disable timer over flow interrupt
