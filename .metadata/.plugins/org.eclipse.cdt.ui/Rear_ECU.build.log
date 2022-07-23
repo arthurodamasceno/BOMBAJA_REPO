@@ -1,4 +1,4 @@
-20:47:46 **** Incremental Build of configuration Debug for project Rear_ECU ****
+14:16:10 **** Incremental Build of configuration Debug for project Rear_ECU ****
 make -j8 all 
 arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Middlewares/Third_Party/FreeRTOS/Source/include -I"D:/BOMBAJA_REPO/Rear_ECU/Middlewares/Third_Party/SEGGER/Config" -I"D:/BOMBAJA_REPO/Rear_ECU/Middlewares/Third_Party/SEGGER/OS" -I"D:/BOMBAJA_REPO/Rear_ECU/Middlewares/Third_Party/SEGGER/SEGGER" -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM3 -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
 arm-none-eabi-gcc -o "Rear_ECU.elf" @"objects.list"   -mcpu=cortex-m3 -T"D:\BOMBAJA_REPO\Rear_ECU\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Rear_ECU.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
@@ -9,15 +9,15 @@ arm-none-eabi-objcopy  -O ihex  Rear_ECU.elf  "Rear_ECU.hex"
 arm-none-eabi-objcopy  -O binary  Rear_ECU.elf  "Rear_ECU.bin"
 arm-none-eabi-size   Rear_ECU.elf 
    text	   data	    bss	    dec	    hex	filename
-  34144	     24	  10656	  44824	   af18	Rear_ECU.elf
+  34256	     24	  10664	  44944	   af90	Rear_ECU.elf
 Finished building: default.size.stdout
  
 Finished building: Rear_ECU.bin
-Finished building: Rear_ECU.hex
  
+Finished building: Rear_ECU.hex
  
 Finished building: Rear_ECU.list
  
 
-20:48:03 Build Finished. 0 errors, 0 warnings. (took 17s.243ms)
+14:16:17 Build Finished. 0 errors, 0 warnings. (took 7s.603ms)
 

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="SIZE"/>
+		<item key="selection" value="buffer[18]"/>
 		<item key="wrap" value="false"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="buffer[18]"/>
+			<item value="buffer[18]7"/>
 			<item value="size"/>
 			<item value="NVIC"/>
 			<item value="Toggle"/>
@@ -21,8 +23,6 @@
 			<item value="Base"/>
 			<item value="configMAX_SYSCALL_INTERRUPT_PRIORITY"/>
 			<item value="AHB1"/>
-			<item value="RTT_B"/>
-			<item value="can"/>
 		</list>
 		<list key="replacehistory">
 		</list>

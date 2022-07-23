@@ -11,7 +11,7 @@ main.c:448:6:Bat_taskF	80	static
 main.c:481:6:Fuel_taskF	144	static
 main.c:559:6:Speed_taskF	72	static
 main.c:595:6:RPM_taskF	72	static
-main.c:630:6:Temp_taskF	80	static
-main.c:679:6:OD_taskF	56	static
-main.c:710:6:HAL_TIM_PeriodElapsedCallback	16	static
-main.c:726:6:Error_Handler	4	static
+main.c:630:6:Temp_taskF	88	static
+main.c:681:6:OD_taskF	56	static
+main.c:712:6:HAL_TIM_PeriodElapsedCallback	16	static
+main.c:728:6:Error_Handler	4	static

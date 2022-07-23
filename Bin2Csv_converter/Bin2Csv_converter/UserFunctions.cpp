@@ -14,7 +14,7 @@ void printData(FILE* pr, data_t* data) {
 	
 	fprintf(pr, ",%u", data->time - startMicros);
 	for (int i = 0; i < ADC_DIM; i++) {
-		unsigned adc = data->adc[i];
+		uint32_t adc = data->adc[i];
 		fprintf(pr, ",%u.0", adc);
 	}
 	fprintf(pr, "\n");

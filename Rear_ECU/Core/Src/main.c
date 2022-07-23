@@ -68,7 +68,7 @@ uint16_t batval_old = 0;
 uint8_t odbuff[1];
 uint8_t rpmbuff[2];
 
-float fuel_f=0.0,fuel_f1=0.0,fuel_f2=0.0;
+float fuel_f=0.0,fuel_f1=0.0,fuel_f2=0.0, temp_f=0.0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -494,8 +494,8 @@ void Fuel_taskF(void *pvParameters) {
 		fuel_f2 = 0.999987433708342*fuel_f2 + (1-0.999987433708342) * (float)fuel_a;
 
 		uint16_t fuel_c = (uint16_t)fuel_f;
-		uint32_t fuel_c1 = (uint16_t)fuel_f1;
-		uint32_t fuel_c2 = (uint16_t)fuel_f2;
+		uint32_t fuel_c1 = (uint32_t)fuel_f1;
+		uint32_t fuel_c2 = (uint32_t)fuel_f2;
 
 		fuelbuff[0] = (uint8_t) (fuel_c >> 8) & 0xFF;
 		fuelbuff[1] = (uint8_t) fuel_c & 0xFF;
@@ -652,10 +652,12 @@ void Temp_taskF(void *pvParameters) {
 			//	temp16 += tempdata[n] * (2048 / (1 << (n - 1)));
 			//}
 		}
+		temp_f = 0.7152892160251179* temp_f + (1-0.7152892160251179) * (float)temp16;
+		uint16_t tempRx = (uint16_t) temp_f;
 
 		uint8_t tempbuff[2];
-		tempbuff[0] = (uint8_t) (temp16 >> 8) & 0xFF;
-		tempbuff[1] = (uint8_t) temp16 & 0xFF;
+		tempbuff[0] = (uint8_t) (tempRx >> 8) & 0xFF;
+		tempbuff[1] = (uint8_t) tempRx & 0xFF;
 
 		uint32_t TxMailbox;
 
