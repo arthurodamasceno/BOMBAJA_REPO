@@ -558,7 +558,7 @@ void Fuel_taskF(void *pvParameters) {
 /*Speed read task */
 void Speed_taskF(void *pvParameters) {
 	TickType_t xLastWakeTime;
-	const TickType_t xFrequency = 200;  //Ticks to wait since routine starts
+	const TickType_t xFrequency = 20;  //Ticks to wait since routine starts
 	xLastWakeTime = xTaskGetTickCount();
 	while (1) {
 		uint8_t speedbuff[2];
@@ -594,7 +594,7 @@ void Speed_taskF(void *pvParameters) {
 /*RPM read task */
 void RPM_taskF(void *pvParameters) {
 	TickType_t xLastWakeTime;
-	const TickType_t xFrequency = 200;  //Ticks to wait since routine starts
+	const TickType_t xFrequency = 20;  //Ticks to wait since routine starts
 	xLastWakeTime = xTaskGetTickCount();
 	while (1) {
 

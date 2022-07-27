@@ -2853,8 +2853,8 @@ void Speed_taskF(void *pvParameters) {
  8001910:	af02      	add	r7, sp, #8
  8001912:	6078      	str	r0, [r7, #4]
 	TickType_t xLastWakeTime;
-	const TickType_t xFrequency = 200;  //Ticks to wait since routine starts
- 8001914:	23c8      	movs	r3, #200	; 0xc8
+	const TickType_t xFrequency = 20;  //Ticks to wait since routine starts
+ 8001914:	2314      	movs	r3, #20
  8001916:	637b      	str	r3, [r7, #52]	; 0x34
 	xLastWakeTime = xTaskGetTickCount();
  8001918:	f004 fbbe 	bl	8006098 <xTaskGetTickCount>
@@ -2966,8 +2966,8 @@ void RPM_taskF(void *pvParameters) {
  80019d0:	af02      	add	r7, sp, #8
  80019d2:	6078      	str	r0, [r7, #4]
 	TickType_t xLastWakeTime;
-	const TickType_t xFrequency = 200;  //Ticks to wait since routine starts
- 80019d4:	23c8      	movs	r3, #200	; 0xc8
+	const TickType_t xFrequency = 20;  //Ticks to wait since routine starts
+ 80019d4:	2314      	movs	r3, #20
  80019d6:	637b      	str	r3, [r7, #52]	; 0x34
 	xLastWakeTime = xTaskGetTickCount();
  80019d8:	f004 fb5e 	bl	8006098 <xTaskGetTickCount>
